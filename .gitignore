@@ -1,0 +1,65 @@
+# Common OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Flutter / Dart
+client/.dart_tool/
+client/.flutter-plugins
+client/.flutter-plugins-dependencies
+client/.packages
+client/.pub-cache/
+client/.pub/
+client/build/
+client/ios/Flutter/Generated.xcconfig
+client/ios/Flutter/flutter_export_environment.sh
+client/ios/Flutter/Flutter.podspec
+client/ios/Pods/
+client/ios/ServiceDefinitions.json
+client/ios/Runner/GeneratedPluginRegistrant.h
+client/ios/Runner/GeneratedPluginRegistrant.m
+client/android/app/src/main/java/io/flutter/plugins/
+client/android/local.properties
+client/android/key.properties
+client/android/app/src/main/res/drawable-v21/launch_background.xml
+client/android/app/src/main/res/drawable/launch_background.xml
+client/*.flutter-plugins
+client/*.flutter-plugins-dependencies
+client/*.packages
+client/pubspec.lock
+
+# Node.js
+server/node_modules/
+server/npm-debug.log*
+server/yarn-debug.log*
+server/yarn-error.log*
+server/.pnpm-debug.log*
+
+# Environment files (important!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+server/.env
+client/.env
+
+# IDE - VS Code
+.vscode/
+*.code-workspace
+
+# IDE - IntelliJ / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Miscellaneous
+doc/api/
+ios/Flutter/.last_build_id
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+node_modules/
