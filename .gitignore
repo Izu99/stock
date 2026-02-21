@@ -2,64 +2,59 @@
 .DS_Store
 Thumbs.db
 desktop.ini
+*.log
 
 # Flutter / Dart
-client/.dart_tool/
-client/.flutter-plugins
-client/.flutter-plugins-dependencies
-client/.packages
-client/.pub-cache/
-client/.pub/
-client/build/
-client/ios/Flutter/Generated.xcconfig
-client/ios/Flutter/flutter_export_environment.sh
-client/ios/Flutter/Flutter.podspec
-client/ios/Pods/
-client/ios/ServiceDefinitions.json
-client/ios/Runner/GeneratedPluginRegistrant.h
-client/ios/Runner/GeneratedPluginRegistrant.m
-client/android/app/src/main/java/io/flutter/plugins/
-client/android/local.properties
-client/android/key.properties
-client/android/app/src/main/res/drawable-v21/launch_background.xml
-client/android/app/src/main/res/drawable/launch_background.xml
-client/*.flutter-plugins
-client/*.flutter-plugins-dependencies
-client/*.packages
-client/pubspec.lock
+**/client/.dart_tool/
+**/client/.flutter-plugins
+**/client/.flutter-plugins-dependencies
+**/client/.packages
+**/client/.pub-cache/
+**/client/.pub/
+**/client/build/
+**/client/ios/Flutter/Generated.xcconfig
+**/client/ios/Flutter/flutter_export_environment.sh
+**/client/ios/Flutter/Flutter.podspec
+**/client/ios/Pods/
+**/client/android/local.properties
+**/client/android/key.properties
+**/client/android/app/src/main/res/drawable-*/launch_background.xml
+**/client/pubspec.lock
+
+# Flutter Platform Specifics
+**/client/linux/flutter/ephemeral/
+**/client/macos/Flutter/ephemeral/
+**/client/windows/flutter/ephemeral/
+**/client/windows/flutter/generated_config.cmake
 
 # Node.js
-server/node_modules/
-server/npm-debug.log*
-server/yarn-debug.log*
-server/yarn-error.log*
-server/.pnpm-debug.log*
+node_modules/
+**/server/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
-# Environment files (important!)
+# Environment files
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-server/.env
-client/.env
+**/server/.env
+**/client/.env
 
 # IDE - VS Code
 .vscode/
-*.code-workspace
 
 # IDE - IntelliJ / Android Studio
 .idea/
 *.iml
 *.iws
 *.ipr
+.fleet/
 
 # Miscellaneous
 doc/api/
 ios/Flutter/.last_build_id
-.dart_tool/
-.packages
-.pub-cache/
-.pub/
-build/
-node_modules/
+can yuo 

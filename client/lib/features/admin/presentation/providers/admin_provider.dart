@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:hardware_stock_sales/features/admin/data/models/company.dart';
-import 'package:hardware_stock_sales/features/admin/data/models/company_summary.dart';
-import 'package:hardware_stock_sales/features/admin/data/repositories/company_repository.dart';
+import 'package:Stock/features/admin/data/models/company.dart';
+import 'package:Stock/features/admin/data/models/company_summary.dart';
+import 'package:Stock/features/admin/data/repositories/company_repository.dart';
 
 part 'admin_provider.g.dart';
 

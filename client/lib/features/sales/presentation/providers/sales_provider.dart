@@ -4,7 +4,7 @@ import '../../data/repositories/sales_repository.dart';
 
 part 'sales_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SalesNotifier extends _$SalesNotifier {
   @override
   FutureOr<List<Sale>> build() {
@@ -15,23 +15,22 @@ class SalesNotifier extends _$SalesNotifier {
     state = const AsyncLoading();
     try {
       await ref.read(salesRepositoryProvider).createSale(itemId, quantity);
-      // Check if the provider is still mounted before invalidating
       ref.invalidateSelf();
     } catch (e, st) {
-      state = AsyncError(e, st);
+      if (ref.exists(salesProvider)) {
+        state = AsyncError(e, st);
+      }
     }
   }
 
   Future<void> processCart(List<({String itemId, double quantity})> items) async {
     state = const AsyncLoading();
-    try {
+    state = await AsyncValue.guard(() async {
       final repo = ref.read(salesRepositoryProvider);
       for (final item in items) {
         await repo.createSale(item.itemId, item.quantity);
       }
-      ref.invalidateSelf();
-    } catch (e, st) {
-      state = AsyncError(e, st);
-    }
+      return ref.read(salesRepositoryProvider).getSales();
+    });
   }
 }

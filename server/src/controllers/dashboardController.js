@@ -4,6 +4,7 @@ const Expense = require('../models/Expense');
 const Income = require('../models/Income');
 
 exports.getSummary = async (req, res) => {
+  console.log(`📊 [DashboardController] getSummary called - companyId: ${req.user.companyId}`);
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -42,6 +43,29 @@ exports.getSummary = async (req, res) => {
     // Net Profit = (Sales Profit + Other Income) - Expenses
     const netProfit = (salesProfit + otherIncome) - totalExpenses;
 
+    // Recent Transactions (Last 5)
+    const recentSales = await Sale.find(filter).sort({ date: -1 }).limit(5);
+    const recentExpenses = await Expense.find(filter).sort({ date: -1 }).limit(5);
+
+    const recentTransactions = [
+      ...recentSales.map(s => ({
+        id: s._id,
+        title: s.itemName,
+        amount: s.subtotal,
+        date: s.date,
+        type: 'sale'
+      })),
+      ...recentExpenses.map(e => ({
+        id: e._id,
+        title: e.title,
+        amount: e.amount,
+        date: e.date,
+        type: 'expense'
+      }))
+    ].sort((a, b) => b.date - a.date).slice(0, 5);
+
+    console.log(`✅ [DashboardController] Summary: stockValue=${totalStockValue}, todaySales=${todaySales}, monthlySales=${monthlySales}, expenses=${totalExpenses}, profit=${netProfit}, recentTx=${recentTransactions.length}`);
+
     res.json({
       totalStockValue,
       todaySales,
@@ -49,8 +73,10 @@ exports.getSummary = async (req, res) => {
       totalExpenses,
       otherIncome,
       profit: netProfit,
+      recentTransactions,
     });
   } catch (error) {
+    console.error(`❌ [DashboardController] Error:`, error.message, error.stack);
     res.status(500).json({ message: error.message });
   }
 };

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hardware_stock_sales/l10n/app_localizations.dart';
+import 'package:Stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class MainScreen extends StatelessWidget {

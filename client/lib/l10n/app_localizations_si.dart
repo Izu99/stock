@@ -159,7 +159,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get subtotal => 'උප එකතුව';
 
   @override
-  String get cartEmpty => 'ඔබේ කරත්තය හිස්ය';
+  String get cartEmpty => 'ඔබේ Cart එක හිස්ය';
 
   @override
   String get tapToAdd => 'අයිතම එක් කිරීමට + ක්ලික් කරන්න';

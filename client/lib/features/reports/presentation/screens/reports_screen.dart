@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:hardware_stock_sales/l10n/app_localizations.dart';
+import 'package:Stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../../../dashboard/presentation/providers/dashboard_provider.dart';
@@ -130,7 +130,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 1.1,
+            childAspectRatio: 0.9,
             children: [
               SummaryCard(
                 title: l10n.totalSales,
@@ -207,8 +207,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                   ),
                 ),
                 const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 16,
+                  runSpacing: 8,
                   children: [
                     _buildLegendItem(l10n.sales, AppColors.primary),
                     const SizedBox(width: 16),

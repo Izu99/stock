@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hardware_stock_sales/l10n/app_localizations.dart';
+import 'package:Stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../../../../core/utils/locale_controller.dart';
@@ -55,26 +55,30 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.appTitle,
-                          style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.appTitle,
+                            style: GoogleFonts.inter(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Version 1.0.0',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: Colors.white.withValues(alpha: 0.7),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Version 1.0.0',
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              color: Colors.white.withValues(alpha: 0.7),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -82,28 +86,6 @@ class SettingsScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
-              // General Section
-              _buildSectionTitle(l10n.general),
-              const SizedBox(height: 8),
-
-              // Language Tile
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.divider.withValues(alpha: 0.5)),
-                ),
-                child: Column(
-                  children: [
-                    _buildSettingsTile(
-                      icon: Icons.language_rounded,
-                      iconColor: AppColors.primary,
-                      title: l10n.language,
-                      trailing: LanguageToggle(compact: true),
-                    ),
-                  ],
-                ),
-              ),
 
               const SizedBox(height: 24),
 

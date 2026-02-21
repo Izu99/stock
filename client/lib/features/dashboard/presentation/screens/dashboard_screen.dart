@@ -1,9 +1,10 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:hardware_stock_sales/l10n/app_localizations.dart';
+import 'package:Stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../providers/dashboard_provider.dart';
@@ -64,46 +65,47 @@ class DashboardScreen extends ConsumerWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.white.withValues(alpha: 0.2),
-                                      child: const Icon(Icons.person, color: Colors.white),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _getGreeting(l10n),
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            color: Colors.white.withValues(alpha: 0.8),
-                                          ),
-                                        ),
-                                        Text(
-                                          'Hardware Store',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    LanguageToggle(compact: true),
-                                    const SizedBox(width: 8),
-                                    _buildHeaderButton(Icons.notifications_none_rounded, () {}),
-                                    const SizedBox(width: 8),
-                                    _buildHeaderButton(Icons.settings_outlined, () => context.go('/settings')),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                 Expanded(
+                                   child: Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     mainAxisSize: MainAxisSize.min,
+                                     children: [
+                                       Text(
+                                         _getGreeting(l10n),
+                                         style: GoogleFonts.inter(
+                                           fontSize: 13,
+                                           color: Colors.white.withOpacity(0.8),
+                                         ),
+                                         maxLines: 1,
+                                         overflow: TextOverflow.ellipsis,
+                                       ),
+                                       Text(
+                                         l10n.appTitle,
+                                         style: GoogleFonts.inter(
+                                           fontSize: 18,
+                                           fontWeight: FontWeight.w800,
+                                           color: Colors.white,
+                                         ),
+                                         maxLines: 1,
+                                         overflow: TextOverflow.ellipsis,
+                                       ),
+                                     ],
+                                   ),
+                                 ),
+                                 const SizedBox(width: 12),
+                                 AnimatedOpacity(
+                                   duration: const Duration(milliseconds: 500),
+                                   opacity: summaryAsync.isLoading ? 0 : 1,
+                                   child: Row(
+                                     children: [
+                                       _buildHeaderButton(Icons.notifications_none_rounded, () {}),
+                                       const SizedBox(width: 8),
+                                       _buildHeaderButton(Icons.settings_outlined, () => context.go('/settings')),
+                                     ],
+                                   ),
+                                 ),
+                               ],
+                             ),
                             const Spacer(),
                             // Glassmorphism Balance Card
                             Container(
@@ -114,47 +116,55 @@ class DashboardScreen extends ConsumerWidget {
                                 border: Border.all(color: Colors.white.withOpacity(0.2)),
                               ),
                               child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          l10n.monthlySales,
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            color: Colors.white.withOpacity(0.8),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        summaryAsync.when(
-                                          data: (summary) => Text(
-                                            'Rs. ${summary.monthlySales.toStringAsFixed(0)}',
-                                            style: GoogleFonts.inter(
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          loading: () => const SizedBox(
-                                            height: 38,
-                                            child: Center(child: LinearProgressIndicator(color: Colors.white)),
-                                          ),
-                                          error: (_, __) => const Text('---', style: TextStyle(color: Colors.white)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Icon(Icons.account_balance_wallet_rounded, color: AppColors.primary),
-                                  ),
-                                ],
-                              ),
+                                 children: [
+                                   Expanded(
+                                     child: Column(
+                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                       children: [
+                                         Text(
+                                           l10n.monthlySales,
+                                           style: GoogleFonts.inter(
+                                             fontSize: 13,
+                                             color: Colors.white.withOpacity(0.8),
+                                           ),
+                                         ),
+                                         const SizedBox(height: 4),
+                                         AnimatedSwitcher(
+                                           duration: const Duration(milliseconds: 400),
+                                           child: summaryAsync.when(
+                                             data: (summary) => FittedBox(
+                                               fit: BoxFit.scaleDown,
+                                               alignment: Alignment.centerLeft,
+                                               child: Text(
+                                                 'Rs. ${summary.monthlySales.toStringAsFixed(0)}',
+                                                 style: GoogleFonts.inter(
+                                                   fontSize: 32,
+                                                   fontWeight: FontWeight.w900,
+                                                   color: Colors.white,
+                                                 ),
+                                               ),
+                                             ),
+                                             loading: () => _buildPulseLine(width: 120, height: 32),
+                                             error: (_, __) => const Text('---', style: TextStyle(color: Colors.white)),
+                                           ),
+                                         ),
+                                       ],
+                                     ),
+                                   ),
+                                   AnimatedOpacity(
+                                     duration: const Duration(milliseconds: 600),
+                                     opacity: summaryAsync.isLoading ? 0 : 1,
+                                     child: Container(
+                                       padding: const EdgeInsets.all(12),
+                                       decoration: BoxDecoration(
+                                         color: Colors.white,
+                                         borderRadius: BorderRadius.circular(16),
+                                       ),
+                                       child: Icon(Icons.account_balance_wallet_rounded, color: AppColors.primary),
+                                     ),
+                                   ),
+                                 ],
+                               ),
                             ),
                             const SizedBox(height: 10),
                           ],
@@ -189,7 +199,7 @@ class DashboardScreen extends ConsumerWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           mainAxisSpacing: 16,
                           crossAxisSpacing: 16,
-                          childAspectRatio: 1.1,
+                          childAspectRatio: 0.9,
                           children: [
                             SummaryCard(
                               title: l10n.totalStockValue,
@@ -291,7 +301,7 @@ class DashboardScreen extends ConsumerWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           mainAxisSpacing: 12,
                           crossAxisSpacing: 12,
-                          childAspectRatio: 0.85,
+                          childAspectRatio: 0.75,
                           children: [
                             QuickActionButton(
                               label: l10n.newSale,
@@ -329,24 +339,30 @@ class DashboardScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          child: Column(
-                            children: [
-                              _buildTransactionItem('Customer #1024', 'Rs. 2,450', '2 mins ago', Icons.arrow_upward_rounded, AppColors.success),
-                              const Divider(height: 1, indent: 60),
-                              _buildTransactionItem('Electricity Bill', 'Rs. 5,800', '1 hour ago', Icons.arrow_downward_rounded, AppColors.error),
-                              const Divider(height: 1, indent: 60),
-                              _buildTransactionItem('Vendor Payment', 'Rs. 12,000', '3 hours ago', Icons.arrow_downward_rounded, AppColors.error),
-                              const Divider(height: 1, indent: 60),
-                              _buildTransactionItem('Customer #1023', 'Rs. 1,200', '5 hours ago', Icons.arrow_upward_rounded, AppColors.success),
-                            ],
-                          ),
+                          child: summary.recentTransactions.isEmpty 
+                            ? Padding(
+                                padding: const EdgeInsets.all(24),
+                                child: Text('No recent transactions', style: GoogleFonts.inter(color: AppColors.textSecondary)),
+                              )
+                            : Column(
+                                children: [
+                                  for (int i = 0; i < summary.recentTransactions.length; i++) ...[
+                                    _buildTransactionItem(
+                                      summary.recentTransactions[i].title, 
+                                      'Rs. ${summary.recentTransactions[i].amount.toStringAsFixed(0)}', 
+                                      _formatDate(summary.recentTransactions[i].date), 
+                                      summary.recentTransactions[i].type == 'sale' ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded, 
+                                      summary.recentTransactions[i].type == 'sale' ? AppColors.success : AppColors.error
+                                    ),
+                                    if (i < summary.recentTransactions.length - 1)
+                                      const Divider(height: 1, indent: 60),
+                                  ],
+                                ],
+                              ),
                         ),
                       ],
                     ),
-                    loading: () => const Padding(
-                      padding: EdgeInsets.only(top: 80),
-                      child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
-                    ),
+                    loading: () => _buildLoadingSkeleton(l10n),
                     error: (err, stack) => _buildErrorWidget(context, ref, err, l10n),
                   ),
                 ]),
@@ -454,5 +470,69 @@ class DashboardScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildLoadingSkeleton(AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(title: l10n.overview),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          childAspectRatio: 0.9,
+          children: List.generate(4, (index) => _buildSkeletonCard()),
+        ),
+        const SizedBox(height: 32),
+        SectionHeader(title: 'Business Performance'),
+        _buildSkeletonCard(height: 240),
+      ],
+    );
+  }
+
+  Widget _buildSkeletonCard({double height = 150}) {
+    return _buildPulseLine(height: height, borderRadius: 24, color: Colors.white);
+  }
+
+  Widget _buildPulseLine({
+    double width = double.infinity,
+    double height = 20,
+    double borderRadius = 12,
+    Color? color,
+  }) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.4, end: 0.7),
+      duration: const Duration(milliseconds: 1000),
+      builder: (context, opacity, child) {
+        return Opacity(
+          opacity: opacity,
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: color ?? Colors.white.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+          ),
+        );
+      },
+      onEnd: () {},
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} mins ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
+    } else {
+      return DateFormat('MMM dd, yyyy').format(date);
+    }
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hardware_stock_sales/l10n/app_localizations.dart';
+import 'package:Stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/locale_controller.dart';
 import '../providers/auth_provider.dart';
@@ -122,32 +122,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     SizedBox(height: size.height * 0.08),
                     // Logo / Icon
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: AppColors.blueGradient,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.3),
+                            color: AppColors.primary.withValues(alpha: 0.2),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.inventory_2_rounded,
-                        size: 48,
-                        color: Colors.white,
+                      child: Image.asset(
+                        'logo.png',
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     const SizedBox(height: 28),
                     Text(
                       l10n.appTitle,
                       style: GoogleFonts.inter(
-                        fontSize: 28,
+                        fontSize: 16,
                         fontWeight: FontWeight.w800,
                         color: AppColors.primary,
+                        letterSpacing: -0.2,
                       ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -252,31 +257,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                       ),
                     ),
 
-                    const SizedBox(height: 24),
-                    // Language toggle
-                    ListenableBuilder(
-                      listenable: localeController,
-                      builder: (context, child) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.divider),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _buildLangChip('EN', const Locale('en'),
-                                  localeController.locale.languageCode == 'en'),
-                              const SizedBox(width: 4),
-                              _buildLangChip('සිං', const Locale('si'),
-                                  localeController.locale.languageCode == 'si'),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
                     SizedBox(height: size.height * 0.05),
                   ],
                 ),
