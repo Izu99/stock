@@ -290,7 +290,7 @@ as String,
 /// @nodoc
 mixin _$DashboardSummary {
 
- double get totalStockValue; double get todaySales; double get monthlySales; double get totalExpenses; double get otherIncome; double get profit; List<DashboardTransaction> get recentTransactions;
+ double get totalStockValue; double get todaySales; double get monthlySales; double get totalExpenses; double get otherIncome; double get profit; int get totalItems; int get lowStockCount; List<DashboardTransaction> get recentTransactions; List<Map<String, dynamic>>? get salesHistory; List<Map<String, dynamic>>? get topItems;
 /// Create a copy of DashboardSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +303,16 @@ $DashboardSummaryCopyWith<DashboardSummary> get copyWith => _$DashboardSummaryCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardSummary&&(identical(other.totalStockValue, totalStockValue) || other.totalStockValue == totalStockValue)&&(identical(other.todaySales, todaySales) || other.todaySales == todaySales)&&(identical(other.monthlySales, monthlySales) || other.monthlySales == monthlySales)&&(identical(other.totalExpenses, totalExpenses) || other.totalExpenses == totalExpenses)&&(identical(other.otherIncome, otherIncome) || other.otherIncome == otherIncome)&&(identical(other.profit, profit) || other.profit == profit)&&const DeepCollectionEquality().equals(other.recentTransactions, recentTransactions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardSummary&&(identical(other.totalStockValue, totalStockValue) || other.totalStockValue == totalStockValue)&&(identical(other.todaySales, todaySales) || other.todaySales == todaySales)&&(identical(other.monthlySales, monthlySales) || other.monthlySales == monthlySales)&&(identical(other.totalExpenses, totalExpenses) || other.totalExpenses == totalExpenses)&&(identical(other.otherIncome, otherIncome) || other.otherIncome == otherIncome)&&(identical(other.profit, profit) || other.profit == profit)&&(identical(other.totalItems, totalItems) || other.totalItems == totalItems)&&(identical(other.lowStockCount, lowStockCount) || other.lowStockCount == lowStockCount)&&const DeepCollectionEquality().equals(other.recentTransactions, recentTransactions)&&const DeepCollectionEquality().equals(other.salesHistory, salesHistory)&&const DeepCollectionEquality().equals(other.topItems, topItems));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalStockValue,todaySales,monthlySales,totalExpenses,otherIncome,profit,const DeepCollectionEquality().hash(recentTransactions));
+int get hashCode => Object.hash(runtimeType,totalStockValue,todaySales,monthlySales,totalExpenses,otherIncome,profit,totalItems,lowStockCount,const DeepCollectionEquality().hash(recentTransactions),const DeepCollectionEquality().hash(salesHistory),const DeepCollectionEquality().hash(topItems));
 
 @override
 String toString() {
-  return 'DashboardSummary(totalStockValue: $totalStockValue, todaySales: $todaySales, monthlySales: $monthlySales, totalExpenses: $totalExpenses, otherIncome: $otherIncome, profit: $profit, recentTransactions: $recentTransactions)';
+  return 'DashboardSummary(totalStockValue: $totalStockValue, todaySales: $todaySales, monthlySales: $monthlySales, totalExpenses: $totalExpenses, otherIncome: $otherIncome, profit: $profit, totalItems: $totalItems, lowStockCount: $lowStockCount, recentTransactions: $recentTransactions, salesHistory: $salesHistory, topItems: $topItems)';
 }
 
 
@@ -323,7 +323,7 @@ abstract mixin class $DashboardSummaryCopyWith<$Res>  {
   factory $DashboardSummaryCopyWith(DashboardSummary value, $Res Function(DashboardSummary) _then) = _$DashboardSummaryCopyWithImpl;
 @useResult
 $Res call({
- double totalStockValue, double todaySales, double monthlySales, double totalExpenses, double otherIncome, double profit, List<DashboardTransaction> recentTransactions
+ double totalStockValue, double todaySales, double monthlySales, double totalExpenses, double otherIncome, double profit, int totalItems, int lowStockCount, List<DashboardTransaction> recentTransactions, List<Map<String, dynamic>>? salesHistory, List<Map<String, dynamic>>? topItems
 });
 
 
@@ -340,7 +340,7 @@ class _$DashboardSummaryCopyWithImpl<$Res>
 
 /// Create a copy of DashboardSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? totalStockValue = null,Object? todaySales = null,Object? monthlySales = null,Object? totalExpenses = null,Object? otherIncome = null,Object? profit = null,Object? recentTransactions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? totalStockValue = null,Object? todaySales = null,Object? monthlySales = null,Object? totalExpenses = null,Object? otherIncome = null,Object? profit = null,Object? totalItems = null,Object? lowStockCount = null,Object? recentTransactions = null,Object? salesHistory = freezed,Object? topItems = freezed,}) {
   return _then(_self.copyWith(
 totalStockValue: null == totalStockValue ? _self.totalStockValue : totalStockValue // ignore: cast_nullable_to_non_nullable
 as double,todaySales: null == todaySales ? _self.todaySales : todaySales // ignore: cast_nullable_to_non_nullable
@@ -348,8 +348,12 @@ as double,monthlySales: null == monthlySales ? _self.monthlySales : monthlySales
 as double,totalExpenses: null == totalExpenses ? _self.totalExpenses : totalExpenses // ignore: cast_nullable_to_non_nullable
 as double,otherIncome: null == otherIncome ? _self.otherIncome : otherIncome // ignore: cast_nullable_to_non_nullable
 as double,profit: null == profit ? _self.profit : profit // ignore: cast_nullable_to_non_nullable
-as double,recentTransactions: null == recentTransactions ? _self.recentTransactions : recentTransactions // ignore: cast_nullable_to_non_nullable
-as List<DashboardTransaction>,
+as double,totalItems: null == totalItems ? _self.totalItems : totalItems // ignore: cast_nullable_to_non_nullable
+as int,lowStockCount: null == lowStockCount ? _self.lowStockCount : lowStockCount // ignore: cast_nullable_to_non_nullable
+as int,recentTransactions: null == recentTransactions ? _self.recentTransactions : recentTransactions // ignore: cast_nullable_to_non_nullable
+as List<DashboardTransaction>,salesHistory: freezed == salesHistory ? _self.salesHistory : salesHistory // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,topItems: freezed == topItems ? _self.topItems : topItems // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,
   ));
 }
 
@@ -434,10 +438,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double totalStockValue,  double todaySales,  double monthlySales,  double totalExpenses,  double otherIncome,  double profit,  List<DashboardTransaction> recentTransactions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double totalStockValue,  double todaySales,  double monthlySales,  double totalExpenses,  double otherIncome,  double profit,  int totalItems,  int lowStockCount,  List<DashboardTransaction> recentTransactions,  List<Map<String, dynamic>>? salesHistory,  List<Map<String, dynamic>>? topItems)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DashboardSummary() when $default != null:
-return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.totalExpenses,_that.otherIncome,_that.profit,_that.recentTransactions);case _:
+return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.totalExpenses,_that.otherIncome,_that.profit,_that.totalItems,_that.lowStockCount,_that.recentTransactions,_that.salesHistory,_that.topItems);case _:
   return orElse();
 
 }
@@ -455,10 +459,10 @@ return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double totalStockValue,  double todaySales,  double monthlySales,  double totalExpenses,  double otherIncome,  double profit,  List<DashboardTransaction> recentTransactions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double totalStockValue,  double todaySales,  double monthlySales,  double totalExpenses,  double otherIncome,  double profit,  int totalItems,  int lowStockCount,  List<DashboardTransaction> recentTransactions,  List<Map<String, dynamic>>? salesHistory,  List<Map<String, dynamic>>? topItems)  $default,) {final _that = this;
 switch (_that) {
 case _DashboardSummary():
-return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.totalExpenses,_that.otherIncome,_that.profit,_that.recentTransactions);case _:
+return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.totalExpenses,_that.otherIncome,_that.profit,_that.totalItems,_that.lowStockCount,_that.recentTransactions,_that.salesHistory,_that.topItems);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -475,10 +479,10 @@ return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double totalStockValue,  double todaySales,  double monthlySales,  double totalExpenses,  double otherIncome,  double profit,  List<DashboardTransaction> recentTransactions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double totalStockValue,  double todaySales,  double monthlySales,  double totalExpenses,  double otherIncome,  double profit,  int totalItems,  int lowStockCount,  List<DashboardTransaction> recentTransactions,  List<Map<String, dynamic>>? salesHistory,  List<Map<String, dynamic>>? topItems)?  $default,) {final _that = this;
 switch (_that) {
 case _DashboardSummary() when $default != null:
-return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.totalExpenses,_that.otherIncome,_that.profit,_that.recentTransactions);case _:
+return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.totalExpenses,_that.otherIncome,_that.profit,_that.totalItems,_that.lowStockCount,_that.recentTransactions,_that.salesHistory,_that.topItems);case _:
   return null;
 
 }
@@ -490,7 +494,7 @@ return $default(_that.totalStockValue,_that.todaySales,_that.monthlySales,_that.
 @JsonSerializable()
 
 class _DashboardSummary implements DashboardSummary {
-  const _DashboardSummary({required this.totalStockValue, required this.todaySales, required this.monthlySales, required this.totalExpenses, required this.otherIncome, required this.profit, final  List<DashboardTransaction> recentTransactions = const []}): _recentTransactions = recentTransactions;
+  const _DashboardSummary({required this.totalStockValue, required this.todaySales, required this.monthlySales, required this.totalExpenses, required this.otherIncome, required this.profit, this.totalItems = 0, this.lowStockCount = 0, final  List<DashboardTransaction> recentTransactions = const [], final  List<Map<String, dynamic>>? salesHistory, final  List<Map<String, dynamic>>? topItems}): _recentTransactions = recentTransactions,_salesHistory = salesHistory,_topItems = topItems;
   factory _DashboardSummary.fromJson(Map<String, dynamic> json) => _$DashboardSummaryFromJson(json);
 
 @override final  double totalStockValue;
@@ -499,11 +503,31 @@ class _DashboardSummary implements DashboardSummary {
 @override final  double totalExpenses;
 @override final  double otherIncome;
 @override final  double profit;
+@override@JsonKey() final  int totalItems;
+@override@JsonKey() final  int lowStockCount;
  final  List<DashboardTransaction> _recentTransactions;
 @override@JsonKey() List<DashboardTransaction> get recentTransactions {
   if (_recentTransactions is EqualUnmodifiableListView) return _recentTransactions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_recentTransactions);
+}
+
+ final  List<Map<String, dynamic>>? _salesHistory;
+@override List<Map<String, dynamic>>? get salesHistory {
+  final value = _salesHistory;
+  if (value == null) return null;
+  if (_salesHistory is EqualUnmodifiableListView) return _salesHistory;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<Map<String, dynamic>>? _topItems;
+@override List<Map<String, dynamic>>? get topItems {
+  final value = _topItems;
+  if (value == null) return null;
+  if (_topItems is EqualUnmodifiableListView) return _topItems;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
 }
 
 
@@ -520,16 +544,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardSummary&&(identical(other.totalStockValue, totalStockValue) || other.totalStockValue == totalStockValue)&&(identical(other.todaySales, todaySales) || other.todaySales == todaySales)&&(identical(other.monthlySales, monthlySales) || other.monthlySales == monthlySales)&&(identical(other.totalExpenses, totalExpenses) || other.totalExpenses == totalExpenses)&&(identical(other.otherIncome, otherIncome) || other.otherIncome == otherIncome)&&(identical(other.profit, profit) || other.profit == profit)&&const DeepCollectionEquality().equals(other._recentTransactions, _recentTransactions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardSummary&&(identical(other.totalStockValue, totalStockValue) || other.totalStockValue == totalStockValue)&&(identical(other.todaySales, todaySales) || other.todaySales == todaySales)&&(identical(other.monthlySales, monthlySales) || other.monthlySales == monthlySales)&&(identical(other.totalExpenses, totalExpenses) || other.totalExpenses == totalExpenses)&&(identical(other.otherIncome, otherIncome) || other.otherIncome == otherIncome)&&(identical(other.profit, profit) || other.profit == profit)&&(identical(other.totalItems, totalItems) || other.totalItems == totalItems)&&(identical(other.lowStockCount, lowStockCount) || other.lowStockCount == lowStockCount)&&const DeepCollectionEquality().equals(other._recentTransactions, _recentTransactions)&&const DeepCollectionEquality().equals(other._salesHistory, _salesHistory)&&const DeepCollectionEquality().equals(other._topItems, _topItems));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalStockValue,todaySales,monthlySales,totalExpenses,otherIncome,profit,const DeepCollectionEquality().hash(_recentTransactions));
+int get hashCode => Object.hash(runtimeType,totalStockValue,todaySales,monthlySales,totalExpenses,otherIncome,profit,totalItems,lowStockCount,const DeepCollectionEquality().hash(_recentTransactions),const DeepCollectionEquality().hash(_salesHistory),const DeepCollectionEquality().hash(_topItems));
 
 @override
 String toString() {
-  return 'DashboardSummary(totalStockValue: $totalStockValue, todaySales: $todaySales, monthlySales: $monthlySales, totalExpenses: $totalExpenses, otherIncome: $otherIncome, profit: $profit, recentTransactions: $recentTransactions)';
+  return 'DashboardSummary(totalStockValue: $totalStockValue, todaySales: $todaySales, monthlySales: $monthlySales, totalExpenses: $totalExpenses, otherIncome: $otherIncome, profit: $profit, totalItems: $totalItems, lowStockCount: $lowStockCount, recentTransactions: $recentTransactions, salesHistory: $salesHistory, topItems: $topItems)';
 }
 
 
@@ -540,7 +564,7 @@ abstract mixin class _$DashboardSummaryCopyWith<$Res> implements $DashboardSumma
   factory _$DashboardSummaryCopyWith(_DashboardSummary value, $Res Function(_DashboardSummary) _then) = __$DashboardSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- double totalStockValue, double todaySales, double monthlySales, double totalExpenses, double otherIncome, double profit, List<DashboardTransaction> recentTransactions
+ double totalStockValue, double todaySales, double monthlySales, double totalExpenses, double otherIncome, double profit, int totalItems, int lowStockCount, List<DashboardTransaction> recentTransactions, List<Map<String, dynamic>>? salesHistory, List<Map<String, dynamic>>? topItems
 });
 
 
@@ -557,7 +581,7 @@ class __$DashboardSummaryCopyWithImpl<$Res>
 
 /// Create a copy of DashboardSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? totalStockValue = null,Object? todaySales = null,Object? monthlySales = null,Object? totalExpenses = null,Object? otherIncome = null,Object? profit = null,Object? recentTransactions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? totalStockValue = null,Object? todaySales = null,Object? monthlySales = null,Object? totalExpenses = null,Object? otherIncome = null,Object? profit = null,Object? totalItems = null,Object? lowStockCount = null,Object? recentTransactions = null,Object? salesHistory = freezed,Object? topItems = freezed,}) {
   return _then(_DashboardSummary(
 totalStockValue: null == totalStockValue ? _self.totalStockValue : totalStockValue // ignore: cast_nullable_to_non_nullable
 as double,todaySales: null == todaySales ? _self.todaySales : todaySales // ignore: cast_nullable_to_non_nullable
@@ -565,8 +589,12 @@ as double,monthlySales: null == monthlySales ? _self.monthlySales : monthlySales
 as double,totalExpenses: null == totalExpenses ? _self.totalExpenses : totalExpenses // ignore: cast_nullable_to_non_nullable
 as double,otherIncome: null == otherIncome ? _self.otherIncome : otherIncome // ignore: cast_nullable_to_non_nullable
 as double,profit: null == profit ? _self.profit : profit // ignore: cast_nullable_to_non_nullable
-as double,recentTransactions: null == recentTransactions ? _self._recentTransactions : recentTransactions // ignore: cast_nullable_to_non_nullable
-as List<DashboardTransaction>,
+as double,totalItems: null == totalItems ? _self.totalItems : totalItems // ignore: cast_nullable_to_non_nullable
+as int,lowStockCount: null == lowStockCount ? _self.lowStockCount : lowStockCount // ignore: cast_nullable_to_non_nullable
+as int,recentTransactions: null == recentTransactions ? _self._recentTransactions : recentTransactions // ignore: cast_nullable_to_non_nullable
+as List<DashboardTransaction>,salesHistory: freezed == salesHistory ? _self._salesHistory : salesHistory // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,topItems: freezed == topItems ? _self._topItems : topItems // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,
   ));
 }
 

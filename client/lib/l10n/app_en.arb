@@ -1,7 +1,7 @@
 {
   "appTitle": "Stock Manager",
   "login": "Login",
-  "username": "Username",
+  "username": "Username, Email or Phone",
   "password": "Password",
   "dashboard": "Dashboard",
   "stock": "Stock",
@@ -90,7 +90,8 @@
   "goodAfternoon": "Good Afternoon",
   "goodEvening": "Good Evening",
   "admin": "Admin",
-  "staff": "Staff",
+  "staff": "Customer",
+  "company": "Company",
   "companies": "Companies",
   "addCompany": "Add Company",
   "companyName": "Company Name",
@@ -142,7 +143,16 @@
   "errorRequired": "Required",
   "actionDelete": "Delete",
   "actionCancel": "Cancel",
+  "actionEdit": "Edit",
   "msgDeleteCompany": "Are you sure you want to delete",
   "serverError": "Server Error. Please try again later.",
-  "usernameError": "Username must be a single word (no spaces)"
+  "usernameError": "Username must be a single word (no spaces)",
+  "recentTransactions": "Recent Transactions",
+  "businessPerformance": "Business Performance",
+  "lowStockAlert": "Low Stock Alert",
+  "viewAll": "View All",
+  "noRecentActivity": "No recent activity",
+  "addStock": "Add Stock",
+  "itemsLowStock": "items are running low on quantity",
+  "categories": "Categories"
 }

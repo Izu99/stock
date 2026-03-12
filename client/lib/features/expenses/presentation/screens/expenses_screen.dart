@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../../../../core/constants/enums.dart';
@@ -19,9 +19,7 @@ class ExpensesScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(l10n.expenses),
-      ),
+      appBar: AppBar(title: Text(l10n.expenses)),
       body: expensesAsync.when(
         data: (expenses) {
           if (expenses.isEmpty) {
@@ -68,7 +66,11 @@ class ExpensesScreen extends ConsumerWidget {
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.receipt_long, color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.receipt_long,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Column(
@@ -160,7 +162,12 @@ class ExpensesScreen extends ConsumerWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () => _showAddEditExpenseDialog(context, l10n, ref, existingExpense: expense),
+          onTap: () => _showAddEditExpenseDialog(
+            context,
+            l10n,
+            ref,
+            existingExpense: expense,
+          ),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Row(
@@ -169,7 +176,9 @@ class ExpensesScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isHardware ? AppColors.warningLight : AppColors.infoLight,
+                    color: isHardware
+                        ? AppColors.warningLight
+                        : AppColors.infoLight,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -199,7 +208,10 @@ class ExpensesScreen extends ConsumerWidget {
                         runSpacing: 4,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.surface,
                               borderRadius: BorderRadius.circular(6),
@@ -253,16 +265,26 @@ class ExpensesScreen extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert, size: 20, color: AppColors.textHint),
+                  icon: const Icon(
+                    Icons.more_vert,
+                    size: 20,
+                    color: AppColors.textHint,
+                  ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 40),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'edit',
                       child: Row(
                         children: [
-                          const Icon(Icons.edit_outlined, size: 18, color: AppColors.primary),
+                          const Icon(
+                            Icons.edit_outlined,
+                            size: 18,
+                            color: AppColors.primary,
+                          ),
                           const SizedBox(width: 8),
                           Text(l10n.edit),
                         ],
@@ -272,16 +294,28 @@ class ExpensesScreen extends ConsumerWidget {
                       value: 'delete',
                       child: Row(
                         children: [
-                          const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
+                          const Icon(
+                            Icons.delete_outline,
+                            size: 18,
+                            color: AppColors.error,
+                          ),
                           const SizedBox(width: 8),
-                          Text(l10n.delete, style: const TextStyle(color: AppColors.error)),
+                          Text(
+                            l10n.delete,
+                            style: const TextStyle(color: AppColors.error),
+                          ),
                         ],
                       ),
                     ),
                   ],
                   onSelected: (value) {
                     if (value == 'edit') {
-                      _showAddEditExpenseDialog(context, l10n, ref, existingExpense: expense);
+                      _showAddEditExpenseDialog(
+                        context,
+                        l10n,
+                        ref,
+                        existingExpense: expense,
+                      );
                     } else if (value == 'delete') {
                       ref.read(expensesProvider.notifier).delete(expense.id);
                     }
@@ -303,9 +337,12 @@ class ExpensesScreen extends ConsumerWidget {
   }) {
     final isEdit = existingExpense != null;
     final titleCtrl = TextEditingController(text: existingExpense?.title ?? '');
-    final amountCtrl = TextEditingController(text: existingExpense?.amount.toString() ?? '');
+    final amountCtrl = TextEditingController(
+      text: existingExpense?.amount.toString() ?? '',
+    );
     final noteCtrl = TextEditingController(text: existingExpense?.note ?? '');
-    ExpenseCategory selectedCategory = existingExpense?.category ?? ExpenseCategory.other;
+    ExpenseCategory selectedCategory =
+        existingExpense?.category ?? ExpenseCategory.other;
     DateTime selectedDate = existingExpense?.date ?? DateTime.now();
     final formKey = GlobalKey<FormState>();
 
@@ -340,7 +377,10 @@ class ExpensesScreen extends ConsumerWidget {
                       children: [
                         Text(
                           isEdit ? l10n.editExpense : l10n.addExpense,
-                          style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700),
+                          style: GoogleFonts.inter(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         IconButton(
                           icon: const Icon(Icons.close),
@@ -361,7 +401,8 @@ class ExpensesScreen extends ConsumerWidget {
                               controller: titleCtrl,
                               label: l10n.title,
                               prefixIcon: Icons.label_outline,
-                              validator: (v) => v == null || v.isEmpty ? l10n.required : null,
+                              validator: (v) =>
+                                  v == null || v.isEmpty ? l10n.required : null,
                             ),
                             const SizedBox(height: 16),
                             AppTextField(
@@ -369,7 +410,8 @@ class ExpensesScreen extends ConsumerWidget {
                               label: l10n.amount,
                               prefixIcon: Icons.attach_money,
                               keyboardType: TextInputType.number,
-                              validator: (v) => v == null || v.isEmpty ? l10n.required : null,
+                              validator: (v) =>
+                                  v == null || v.isEmpty ? l10n.required : null,
                             ),
                             const SizedBox(height: 16),
                             AppDropdownField<ExpenseCategory>(
@@ -377,10 +419,12 @@ class ExpensesScreen extends ConsumerWidget {
                               value: selectedCategory,
                               prefixIcon: Icons.category_outlined,
                               items: ExpenseCategory.values
-                                  .map((c) => DropdownMenuItem(
-                                        value: c,
-                                        child: Text(c.name),
-                                      ))
+                                  .map(
+                                    (c) => DropdownMenuItem(
+                                      value: c,
+                                      child: Text(c.name),
+                                    ),
+                                  )
                                   .toList(),
                               onChanged: (val) {
                                 if (val != null) {
@@ -391,7 +435,9 @@ class ExpensesScreen extends ConsumerWidget {
                             const SizedBox(height: 16),
                             AppTextField(
                               controller: TextEditingController(
-                                text: DateFormat('yyyy-MM-dd').format(selectedDate),
+                                text: DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(selectedDate),
                               ),
                               label: l10n.date,
                               prefixIcon: Icons.calendar_today_outlined,
@@ -425,24 +471,33 @@ class ExpensesScreen extends ConsumerWidget {
                                     final expense = Expense(
                                       id: existingExpense?.id ?? '',
                                       title: titleCtrl.text.trim(),
-                                      amount: double.tryParse(amountCtrl.text) ?? 0,
+                                      amount:
+                                          double.tryParse(amountCtrl.text) ?? 0,
                                       category: selectedCategory,
                                       date: selectedDate,
                                       note: noteCtrl.text.trim().isEmpty
                                           ? null
                                           : noteCtrl.text.trim(),
                                     );
-                                    
+
                                     if (isEdit) {
-                                      ref.read(expensesProvider.notifier).updateExpense(expense);
+                                      ref
+                                          .read(expensesProvider.notifier)
+                                          .updateExpense(expense);
                                     } else {
-                                      ref.read(expensesProvider.notifier).add(expense);
+                                      ref
+                                          .read(expensesProvider.notifier)
+                                          .add(expense);
                                     }
-                                    
+
                                     Navigator.pop(context);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text(isEdit ? l10n.expenseUpdated : l10n.expenseAdded),
+                                        content: Text(
+                                          isEdit
+                                              ? l10n.expenseUpdated
+                                              : l10n.expenseAdded,
+                                        ),
                                         backgroundColor: AppColors.success,
                                       ),
                                     );

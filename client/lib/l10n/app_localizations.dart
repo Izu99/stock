@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @username.
   ///
   /// In en, this message translates to:
-  /// **'Username'**
+  /// **'Username, Email or Phone'**
   String get username;
 
   /// No description provided for @password.
@@ -647,8 +647,14 @@ abstract class AppLocalizations {
   /// No description provided for @staff.
   ///
   /// In en, this message translates to:
-  /// **'Staff'**
+  /// **'Customer'**
   String get staff;
+
+  /// No description provided for @company.
+  ///
+  /// In en, this message translates to:
+  /// **'Company'**
+  String get company;
 
   /// No description provided for @companies.
   ///
@@ -944,6 +950,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get actionCancel;
 
+  /// No description provided for @actionEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get actionEdit;
+
   /// No description provided for @msgDeleteCompany.
   ///
   /// In en, this message translates to:
@@ -961,6 +973,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Username must be a single word (no spaces)'**
   String get usernameError;
+
+  /// No description provided for @recentTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Transactions'**
+  String get recentTransactions;
+
+  /// No description provided for @businessPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Performance'**
+  String get businessPerformance;
+
+  /// No description provided for @lowStockAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock Alert'**
+  String get lowStockAlert;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// No description provided for @noRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent activity'**
+  String get noRecentActivity;
+
+  /// No description provided for @addStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Stock'**
+  String get addStock;
+
+  /// No description provided for @itemsLowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'items are running low on quantity'**
+  String get itemsLowStock;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
 }
 
 class _AppLocalizationsDelegate

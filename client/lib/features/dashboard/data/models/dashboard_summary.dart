@@ -13,7 +13,8 @@ abstract class DashboardTransaction with _$DashboardTransaction {
     required String type,
   }) = _DashboardTransaction;
 
-  factory DashboardTransaction.fromJson(Map<String, dynamic> json) => _$DashboardTransactionFromJson(json);
+  factory DashboardTransaction.fromJson(Map<String, dynamic> json) =>
+      _$DashboardTransactionFromJson(json);
 }
 
 @freezed
@@ -25,8 +26,13 @@ abstract class DashboardSummary with _$DashboardSummary {
     required double totalExpenses,
     required double otherIncome,
     required double profit,
+    @Default(0) int totalItems,
+    @Default(0) int lowStockCount,
     @Default([]) List<DashboardTransaction> recentTransactions,
+    List<Map<String, dynamic>>? salesHistory,
+    List<Map<String, dynamic>>? topItems,
   }) = _DashboardSummary;
 
-  factory DashboardSummary.fromJson(Map<String, dynamic> json) => _$DashboardSummaryFromJson(json);
+  factory DashboardSummary.fromJson(Map<String, dynamic> json) =>
+      _$DashboardSummaryFromJson(json);
 }

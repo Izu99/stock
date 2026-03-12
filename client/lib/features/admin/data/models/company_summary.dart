@@ -11,5 +11,6 @@ abstract class CompanySummary with _$CompanySummary {
     required int inactiveCompanies,
   }) = _CompanySummary;
 
-  factory CompanySummary.fromJson(Map<String, dynamic> json) => _$CompanySummaryFromJson(json);
+  factory CompanySummary.fromJson(Map<String, dynamic> json) =>
+      _$CompanySummaryFromJson(json);
 }

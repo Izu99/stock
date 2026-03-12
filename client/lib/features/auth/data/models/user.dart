@@ -10,6 +10,7 @@ abstract class User with _$User {
     required String username,
     required String email,
     required String role,
+    String? companyName,
     String? token,
   }) = _User;
 

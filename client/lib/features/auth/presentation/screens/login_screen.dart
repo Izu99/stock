@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/locale_controller.dart';
 import '../providers/auth_provider.dart';
@@ -31,15 +32,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.15),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOut),
-    );
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _animController.forward();
   }
 
@@ -60,30 +60,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     ref.listen(authProvider, (previous, next) {
       if (next.value != null && !next.isLoading && !next.hasError) {
         final user = next.value!;
-        if (user.role == 'super_admin') {
+        // admin role is reserved for the platform owner (Super Admin)
+        if (user.role == 'admin') {
           context.go('/admin');
         } else {
+          // company role and others go to shop dashboard
           context.go('/');
         }
       } else if (next.hasError) {
         String errorMessage = l10n.serverError;
         final error = next.error;
-        
-        if (error.toString().contains('401')) {
+        final errorStr = error.toString();
+
+        if (errorStr.contains('Contact admin')) {
+          errorMessage = 'Contact admin to register this email, not registered';
+        } else if (errorStr.contains('401')) {
           errorMessage = 'Invalid username or password';
-        } else if (error.toString().contains('DioException')) {
-           // Try to extract backend message if available
-           errorMessage = 'Connection error. Please check your internet.';
-           final errorStr = error.toString();
-           if (errorStr.contains('message:')) {
-             try {
-                final msgStart = errorStr.indexOf('message:') + 8;
-                final msgEnd = errorStr.indexOf(',', msgStart);
-                if (msgEnd != -1) {
-                  errorMessage = errorStr.substring(msgStart, msgEnd).trim();
-                }
-             } catch (_) {}
-           }
+        } else if (errorStr.contains('DioException')) {
+          // Try to extract backend message if available
+          errorMessage = 'Connection error. Please check your internet.';
+          if (errorStr.contains('message:')) {
+            try {
+              final msgStart = errorStr.indexOf('message:') + 8;
+              final msgEnd = errorStr.indexOf(',', msgStart);
+              if (msgEnd != -1) {
+                errorMessage = errorStr.substring(msgStart, msgEnd).trim();
+              }
+            } catch (_) {}
+          }
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -97,7 +101,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             ),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             margin: const EdgeInsets.all(16),
           ),
         );
@@ -162,7 +168,42 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         color: AppColors.textSecondary,
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 32),
+
+                    // Google Login Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: OutlinedButton.icon(
+                        onPressed: authState.isLoading
+                            ? null
+                            : () => ref
+                                  .read(authProvider.notifier)
+                                  .loginWithGoogle(),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.google,
+                          color: Colors.red,
+                          size: 20,
+                        ),
+                        label: Text(
+                          'Sign in with Google',
+                          style: GoogleFonts.inter(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          side: BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
 
                     // Login form card
                     Container(
@@ -197,10 +238,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               style: GoogleFonts.inter(fontSize: 15),
                               decoration: InputDecoration(
                                 labelText: l10n.username,
-                                prefixIcon: const Icon(Icons.person_outline_rounded, size: 20),
+                                prefixIcon: const Icon(
+                                  Icons.person_outline_rounded,
+                                  size: 20,
+                                ),
                               ),
                               validator: (value) =>
-                                  value == null || value.isEmpty ? l10n.required : null,
+                                  value == null || value.isEmpty
+                                  ? l10n.required
+                                  : null,
                             ),
                             const SizedBox(height: 18),
                             TextFormField(
@@ -209,7 +255,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               style: GoogleFonts.inter(fontSize: 15),
                               decoration: InputDecoration(
                                 labelText: l10n.password,
-                                prefixIcon: const Icon(Icons.lock_outline_rounded, size: 20),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline_rounded,
+                                  size: 20,
+                                ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscurePassword
@@ -218,12 +267,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                     size: 20,
                                   ),
                                   onPressed: () {
-                                    setState(() => _obscurePassword = !_obscurePassword);
+                                    setState(
+                                      () =>
+                                          _obscurePassword = !_obscurePassword,
+                                    );
                                   },
                                 ),
                               ),
                               validator: (value) =>
-                                  value == null || value.isEmpty ? l10n.required : null,
+                                  value == null || value.isEmpty
+                                  ? l10n.required
+                                  : null,
                             ),
                             const SizedBox(height: 28),
                             SizedBox(
@@ -234,7 +288,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                     ? null
                                     : () {
                                         if (_formKey.currentState!.validate()) {
-                                          ref.read(authProvider.notifier).login(
+                                          ref
+                                              .read(authProvider.notifier)
+                                              .login(
                                                 _usernameController.text.trim(),
                                                 _passwordController.text.trim(),
                                               );

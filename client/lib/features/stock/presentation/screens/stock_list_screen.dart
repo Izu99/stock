@@ -1,12 +1,16 @@
+import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../../../../core/constants/enums.dart';
 import '../../data/models/stock_item.dart';
 import '../providers/stock_provider.dart';
+import '../providers/category_provider.dart';
+import '../../data/models/category.dart';
 
 class StockListScreen extends ConsumerStatefulWidget {
   const StockListScreen({super.key});
@@ -30,6 +34,11 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
         title: Text(l10n.stock),
         actions: [
           IconButton(
+            icon: const Icon(Icons.category_outlined),
+            tooltip: l10n.categories,
+            onPressed: () => context.push('/stock/categories'),
+          ),
+          IconButton(
             icon: const Icon(Icons.filter_list_rounded),
             onPressed: _showFilterSheet,
           ),
@@ -51,11 +60,18 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                 style: GoogleFonts.inter(fontSize: 15),
                 decoration: InputDecoration(
                   hintText: l10n.search,
-                  prefixIcon: const Icon(Icons.search_rounded, size: 20, color: AppColors.textHint),
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    size: 20,
+                    color: AppColors.textHint,
+                  ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
                 ),
                 onChanged: (value) => setState(() => _searchQuery = value),
               ),
@@ -65,9 +81,15 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
           // Stock Count + Category Chips
           stockAsyncValue.when(
             data: (stockItems) {
-              final categories = ['All', ...{...stockItems.map((e) => e.category)}];
+              final categories = [
+                'All',
+                ...{...stockItems.map((e) => e.category)},
+              ];
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -80,15 +102,22 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                           final cat = categories.elementAt(index);
                           final isSelected = _selectedCategory == cat;
                           return GestureDetector(
-                            onTap: () => setState(() => _selectedCategory = cat),
+                            onTap: () =>
+                                setState(() => _selectedCategory = cat),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               decoration: BoxDecoration(
-                                color: isSelected ? AppColors.primary : Colors.white,
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: isSelected ? AppColors.primary : AppColors.border,
+                                  color: isSelected
+                                      ? AppColors.primary
+                                      : AppColors.border,
                                 ),
                               ),
                               child: Center(
@@ -97,7 +126,9 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                                   style: GoogleFonts.inter(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
-                                    color: isSelected ? Colors.white : AppColors.textSecondary,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : AppColors.textSecondary,
                                   ),
                                 ),
                               ),
@@ -118,10 +149,15 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
           Expanded(
             child: stockAsyncValue.when(
               data: (stockItems) {
-                var filteredItems = stockItems.where((item) =>
-                    item.name.toLowerCase().contains(_searchQuery.toLowerCase()));
+                var filteredItems = stockItems.where(
+                  (item) => item.name.toLowerCase().contains(
+                    _searchQuery.toLowerCase(),
+                  ),
+                );
                 if (_selectedCategory != 'All') {
-                  filteredItems = filteredItems.where((item) => item.category == _selectedCategory);
+                  filteredItems = filteredItems.where(
+                    (item) => item.category == _selectedCategory,
+                  );
                 }
                 final items = filteredItems.toList();
 
@@ -142,12 +178,22 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                   color: AppColors.primary,
                   onRefresh: () async => ref.invalidate(stockProvider),
                   child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       final item = items[index];
-                      final isLowStock = item.quantity < 10;
-                      return _buildStockCard(context, item, isLowStock, l10n, ref);
+                      final isLowStock =
+                          item.quantity <= item.lowStockThreshold;
+                      return _buildStockCard(
+                        context,
+                        item,
+                        isLowStock,
+                        l10n,
+                        ref,
+                      );
                     },
                   ),
                 );
@@ -205,7 +251,8 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () => _showAddEditDialog(context, l10n, ref, existingItem: item),
+          onTap: () =>
+              _showAddEditDialog(context, l10n, ref, existingItem: item),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Row(
@@ -245,7 +292,10 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                         runSpacing: 4,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.surface,
                               borderRadius: BorderRadius.circular(6),
@@ -265,8 +315,12 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                             '${item.quantity.toStringAsFixed(item.quantity == item.quantity.roundToDouble() ? 0 : 1)} ${item.unit.name}',
                             style: GoogleFonts.inter(
                               fontSize: 12,
-                              color: isLowStock ? AppColors.warning : AppColors.textSecondary,
-                              fontWeight: isLowStock ? FontWeight.w600 : FontWeight.w400,
+                              color: isLowStock
+                                  ? AppColors.warning
+                                  : AppColors.textSecondary,
+                              fontWeight: isLowStock
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
                             ),
                           ),
                           if (isLowStock)
@@ -304,14 +358,24 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                 ),
                 const SizedBox(width: 4),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert, color: AppColors.textHint, size: 20),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: AppColors.textHint,
+                    size: 20,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'edit',
                       child: Row(
                         children: [
-                          const Icon(Icons.edit_outlined, size: 18, color: AppColors.primary),
+                          const Icon(
+                            Icons.edit_outlined,
+                            size: 18,
+                            color: AppColors.primary,
+                          ),
                           const SizedBox(width: 8),
                           Text(l10n.editItem),
                         ],
@@ -321,16 +385,28 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                       value: 'delete',
                       child: Row(
                         children: [
-                          const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
+                          const Icon(
+                            Icons.delete_outline,
+                            size: 18,
+                            color: AppColors.error,
+                          ),
                           const SizedBox(width: 8),
-                          Text(l10n.delete, style: const TextStyle(color: AppColors.error)),
+                          Text(
+                            l10n.delete,
+                            style: const TextStyle(color: AppColors.error),
+                          ),
                         ],
                       ),
                     ),
                   ],
                   onSelected: (value) {
                     if (value == 'edit') {
-                      _showAddEditDialog(context, l10n, ref, existingItem: item);
+                      _showAddEditDialog(
+                        context,
+                        l10n,
+                        ref,
+                        existingItem: item,
+                      );
                     } else if (value == 'delete') {
                       _showDeleteConfirmation(context, l10n, ref, item);
                     }
@@ -434,6 +510,90 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
     );
   }
 
+  void _showQuickAddCategory(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    TextEditingController categoryCtrl,
+    StateSetter setModalState,
+  ) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Add Category'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(hintText: 'Category Name'),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              if (controller.text.isNotEmpty) {
+                final name = controller.text.trim();
+                await ref.read(categoryProvider.notifier).addCategory(name);
+                setModalState(() {
+                  categoryCtrl.text = name;
+                });
+                if (context.mounted) Navigator.pop(ctx);
+              }
+            },
+            child: Text(l10n.save),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showQuickAddSubcategory(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    Category category,
+    TextEditingController subcategoryCtrl,
+    StateSetter setModalState,
+  ) {
+    if (category.id.isEmpty) return;
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Add Subcategory to ${category.name}'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(hintText: 'Subcategory Name'),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              if (controller.text.isNotEmpty) {
+                final name = controller.text.trim();
+                await ref
+                    .read(categoryProvider.notifier)
+                    .addSubcategory(category.id, name);
+                setModalState(() {
+                  subcategoryCtrl.text = name;
+                });
+                if (context.mounted) Navigator.pop(ctx);
+              }
+            },
+            child: Text(l10n.save),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showAddEditDialog(
     BuildContext context,
     AppLocalizations l10n,
@@ -442,14 +602,28 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
   }) {
     final isEdit = existingItem != null;
     final nameCtrl = TextEditingController(text: existingItem?.name ?? '');
-    final buyPriceCtrl = TextEditingController(text: existingItem?.buyPrice.toString() ?? '');
-    final sellPriceCtrl = TextEditingController(text: existingItem?.sellPrice.toString() ?? '');
-    final qtyCtrl = TextEditingController(text: existingItem?.quantity.toString() ?? '');
-    final categoryCtrl = TextEditingController(text: existingItem?.category ?? '');
-    final subcategoryCtrl = TextEditingController(text: existingItem?.subcategory ?? '');
+    final buyPriceCtrl = TextEditingController(
+      text: existingItem?.buyPrice.toString() ?? '',
+    );
+    final sellPriceCtrl = TextEditingController(
+      text: existingItem?.sellPrice.toString() ?? '',
+    );
+    final qtyCtrl = TextEditingController(
+      text: existingItem?.quantity.toString() ?? '',
+    );
+    final thresholdCtrl = TextEditingController(
+      text: existingItem?.lowStockThreshold.toString() ?? '5.0',
+    );
+    final categoryCtrl = TextEditingController(
+      text: existingItem?.category ?? '',
+    );
+    final subcategoryCtrl = TextEditingController(
+      text: existingItem?.subcategory ?? '',
+    );
     final noteCtrl = TextEditingController(text: existingItem?.note ?? '');
     ItemUnit selectedUnit = existingItem?.unit ?? ItemUnit.pcs;
     final formKey = GlobalKey<FormState>();
+    bool isSaving = false;
 
     showModalBottomSheet(
       context: context,
@@ -463,293 +637,451 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
               builder: (context, setModalState) {
                 return Container(
                   height: MediaQuery.of(context).size.height * 0.85,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              ),
-              child: Column(
-                children: [
-                  // Handle bar
-                  Container(
-                    margin: const EdgeInsets.only(top: 12),
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.divider,
-                      borderRadius: BorderRadius.circular(2),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24),
                     ),
                   ),
-                  // Header
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          isEdit ? l10n.editItem : l10n.addItem,
-                          style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
+                  child: Column(
+                    children: [
+                      // Handle bar
+                      Container(
+                        margin: const EdgeInsets.only(top: 12),
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.divider,
+                          borderRadius: BorderRadius.circular(2),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(height: 1),
-                  // Form
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(20),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
+                      ),
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            AppTextField(
-                              controller: nameCtrl,
-                              label: l10n.itemName,
-                              prefixIcon: Icons.inventory_2_outlined,
-                              validator: (v) => v == null || v.isEmpty ? l10n.required : null,
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: AppTextField(
-                                    controller: buyPriceCtrl,
-                                    label: l10n.buyPrice,
-                                    prefixIcon: Icons.shopping_cart_outlined,
-                                    keyboardType: TextInputType.number,
-                                    validator: (v) => v == null || v.isEmpty ? l10n.required : null,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: AppTextField(
-                                    controller: sellPriceCtrl,
-                                    label: l10n.sellPrice,
-                                    prefixIcon: Icons.sell_outlined,
-                                    keyboardType: TextInputType.number,
-                                    validator: (v) => v == null || v.isEmpty ? l10n.required : null,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: AppTextField(
-                                    controller: qtyCtrl,
-                                    label: l10n.quantity,
-                                    prefixIcon: Icons.numbers,
-                                    keyboardType: TextInputType.number,
-                                    validator: (v) => v == null || v.isEmpty ? l10n.required : null,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: AppDropdownField<ItemUnit>(
-                                    label: l10n.unit,
-                                    value: selectedUnit,
-                                    prefixIcon: Icons.straighten,
-                                    items: ItemUnit.values
-                                        .map((u) => DropdownMenuItem(
-                                              value: u,
-                                              child: Text(u.name),
-                                            ))
-                                        .toList(),
-                                    onChanged: (val) {
-                                      if (val != null) {
-                                        setModalState(() => selectedUnit = val);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            // Category with Autocomplete
-                            stockAsyncValue.when(
-                              data: (items) {
-                                final existingCategories = items.map((e) => e.category).toSet().toList();
-                                return RawAutocomplete<String>(
-                                  initialValue: TextEditingValue(text: categoryCtrl.text),
-                                  optionsBuilder: (TextEditingValue textEditingValue) {
-                                    if (textEditingValue.text.isEmpty) {
-                                      return existingCategories;
-                                    }
-                                    return existingCategories.where((String option) {
-                                      return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                                    });
-                                  },
-                                  onSelected: (String selection) {
-                                    categoryCtrl.text = selection;
-                                  },
-                                  fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-                                    // Sync initial value manually if needed, but here we use the controller
-                                    if (controller.text.isEmpty && categoryCtrl.text.isNotEmpty) {
-                                      controller.text = categoryCtrl.text;
-                                    }
-                                    controller.addListener(() {
-                                      categoryCtrl.text = controller.text;
-                                    });
-                                    return AppTextField(
-                                      controller: controller,
-                                      label: l10n.category,
-                                      prefixIcon: Icons.category_outlined,
-                                      validator: (v) => v == null || v.isEmpty ? l10n.required : null,
-                                    );
-                                  },
-                                  optionsViewBuilder: (context, onSelected, options) {
-                                    return Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Material(
-                                        elevation: 4,
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width - 40,
-                                          child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            shrinkWrap: true,
-                                            itemCount: options.length,
-                                            itemBuilder: (BuildContext context, int index) {
-                                              final String option = options.elementAt(index);
-                                              return ListTile(
-                                                title: Text(option),
-                                                onTap: () => onSelected(option),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              loading: () => AppTextField(controller: categoryCtrl, label: l10n.category),
-                              error: (_, __) => AppTextField(controller: categoryCtrl, label: l10n.category),
-                            ),
-                            const SizedBox(height: 16),
-                            // Subcategory with Autocomplete
-                            stockAsyncValue.when(
-                              data: (items) {
-                                final existingSubCategories = items
-                                    .where((e) => e.subcategory != null)
-                                    .map((e) => e.subcategory!)
-                                    .toSet()
-                                    .toList();
-                                return RawAutocomplete<String>(
-                                  initialValue: TextEditingValue(text: subcategoryCtrl.text),
-                                  optionsBuilder: (TextEditingValue textEditingValue) {
-                                    if (textEditingValue.text.isEmpty) {
-                                      return existingSubCategories;
-                                    }
-                                    return existingSubCategories.where((String option) {
-                                      return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
-                                    });
-                                  },
-                                  onSelected: (String selection) {
-                                    subcategoryCtrl.text = selection;
-                                  },
-                                  fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-                                    if (controller.text.isEmpty && subcategoryCtrl.text.isNotEmpty) {
-                                      controller.text = subcategoryCtrl.text;
-                                    }
-                                    controller.addListener(() {
-                                      subcategoryCtrl.text = controller.text;
-                                    });
-                                    return AppTextField(
-                                      controller: controller,
-                                      label: l10n.subcategory,
-                                      prefixIcon: Icons.label_outline,
-                                    );
-                                  },
-                                  optionsViewBuilder: (context, onSelected, options) {
-                                    return Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Material(
-                                        elevation: 4,
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context).size.width - 40,
-                                          child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            shrinkWrap: true,
-                                            itemCount: options.length,
-                                            itemBuilder: (BuildContext context, int index) {
-                                              final String option = options.elementAt(index);
-                                              return ListTile(
-                                                title: Text(option),
-                                                onTap: () => onSelected(option),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              loading: () => AppTextField(controller: subcategoryCtrl, label: l10n.subcategory),
-                              error: (_, __) => AppTextField(controller: subcategoryCtrl, label: l10n.subcategory),
-                            ),
-                            const SizedBox(height: 16),
-                            AppTextField(
-                              controller: noteCtrl,
-                              label: l10n.note,
-                              prefixIcon: Icons.note_outlined,
-                              maxLines: 2,
-                            ),
-                            const SizedBox(height: 24),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 52,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  if (formKey.currentState!.validate()) {
-                                    final item = StockItem(
-                                      id: existingItem?.id ?? '',
-                                      name: nameCtrl.text.trim(),
-                                      buyPrice: double.tryParse(buyPriceCtrl.text) ?? 0,
-                                      sellPrice: double.tryParse(sellPriceCtrl.text) ?? 0,
-                                      quantity: double.tryParse(qtyCtrl.text) ?? 0,
-                                      unit: selectedUnit,
-                                      category: categoryCtrl.text.trim(),
-                                      subcategory: subcategoryCtrl.text.trim().isEmpty
-                                          ? null
-                                          : subcategoryCtrl.text.trim(),
-                                      date: existingItem?.date ?? DateTime.now(),
-                                      note: noteCtrl.text.trim().isEmpty
-                                          ? null
-                                          : noteCtrl.text.trim(),
-                                    );
-                                    if (isEdit) {
-                                      ref.read(stockProvider.notifier).updateItem(item);
-                                    } else {
-                                      ref.read(stockProvider.notifier).addItem(item);
-                                    }
-                                    Navigator.pop(context);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(isEdit ? l10n.itemUpdated : l10n.itemAdded),
-                                        backgroundColor: AppColors.success,
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: Text(isEdit ? l10n.update : l10n.save),
+                            Text(
+                              isEdit ? l10n.editItem : l10n.addItem,
+                              style: GoogleFonts.inter(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
                               ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => Navigator.pop(context),
                             ),
                           ],
                         ),
                       ),
-                    ),
+                      const Divider(height: 1),
+                      // Form
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(20),
+                          child: Form(
+                            key: formKey,
+                            child: Column(
+                              children: [
+                                AppTextField(
+                                  controller: nameCtrl,
+                                  label: l10n.itemName,
+                                  prefixIcon: Icons.inventory_2_outlined,
+                                  validator: (v) => v == null || v.isEmpty
+                                      ? l10n.required
+                                      : null,
+                                ),
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppTextField(
+                                        controller: buyPriceCtrl,
+                                        label: l10n.buyPrice,
+                                        prefixIcon:
+                                            Icons.shopping_cart_outlined,
+                                        keyboardType: TextInputType.number,
+                                        validator: (v) => v == null || v.isEmpty
+                                            ? l10n.required
+                                            : null,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: AppTextField(
+                                        controller: sellPriceCtrl,
+                                        label: l10n.sellPrice,
+                                        prefixIcon: Icons.sell_outlined,
+                                        keyboardType: TextInputType.number,
+                                        validator: (v) => v == null || v.isEmpty
+                                            ? l10n.required
+                                            : null,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppTextField(
+                                        controller: qtyCtrl,
+                                        label: l10n.quantity,
+                                        prefixIcon: Icons.numbers,
+                                        keyboardType: TextInputType.number,
+                                        validator: (v) => v == null || v.isEmpty
+                                            ? l10n.required
+                                            : null,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: AppDropdownField<ItemUnit>(
+                                        label: l10n.unit,
+                                        value: selectedUnit,
+                                        prefixIcon: Icons.straighten,
+                                        items: ItemUnit.values
+                                            .map(
+                                              (u) => DropdownMenuItem(
+                                                value: u,
+                                                child: Text(u.name),
+                                              ),
+                                            )
+                                            .toList(),
+                                        onChanged: (val) {
+                                          if (val != null) {
+                                            setModalState(
+                                              () => selectedUnit = val,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                AppTextField(
+                                  controller: thresholdCtrl,
+                                  label: 'Low Stock Warning Threshold',
+                                  prefixIcon:
+                                      Icons.notification_important_outlined,
+                                  keyboardType: TextInputType.number,
+                                  validator: (v) => v == null || v.isEmpty
+                                      ? l10n.required
+                                      : null,
+                                ),
+                                const SizedBox(height: 16),
+                                // Category Dropdown
+                                Consumer(
+                                  builder: (context, ref, _) {
+                                    final categoriesAsync = ref.watch(
+                                      categoryProvider,
+                                    );
+                                    return categoriesAsync.when(
+                                      data: (categories) {
+                                        final categoryNames = categories
+                                            .map((e) => e.name)
+                                            .toList();
+                                        return Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: AppDropdownField<String>(
+                                                label: l10n.category,
+                                                value:
+                                                    categoryNames.contains(
+                                                      categoryCtrl.text,
+                                                    )
+                                                    ? categoryCtrl.text
+                                                    : null,
+                                                prefixIcon:
+                                                    Icons.category_outlined,
+                                                items: categoryNames
+                                                    .map(
+                                                      (name) =>
+                                                          DropdownMenuItem(
+                                                            value: name,
+                                                            child: Text(name),
+                                                          ),
+                                                    )
+                                                    .toList(),
+                                                onChanged: (val) {
+                                                  if (val != null) {
+                                                    setModalState(() {
+                                                      categoryCtrl.text = val;
+                                                      subcategoryCtrl.clear();
+                                                    });
+                                                  }
+                                                },
+                                                validator: (v) =>
+                                                    v == null || v.isEmpty
+                                                    ? l10n.required
+                                                    : null,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.add_circle_outline,
+                                                color: AppColors.primary,
+                                              ),
+                                              onPressed: () =>
+                                                  _showQuickAddCategory(
+                                                    context,
+                                                    ref,
+                                                    l10n,
+                                                    categoryCtrl,
+                                                    setModalState,
+                                                  ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                      loading: () =>
+                                          const CircularProgressIndicator(),
+                                      error: (_, __) => AppTextField(
+                                        controller: categoryCtrl,
+                                        label: l10n.category,
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+                                // Subcategory Dropdown
+                                Consumer(
+                                  builder: (context, ref, _) {
+                                    final categoriesAsync = ref.watch(
+                                      categoryProvider,
+                                    );
+                                    return categoriesAsync.when(
+                                      data: (categories) {
+                                        final currentCategory = categories
+                                            .firstWhere(
+                                              (c) =>
+                                                  c.name == categoryCtrl.text,
+                                              orElse: () => Category(
+                                                id: '',
+                                                name: '',
+                                                subcategories: [],
+                                              ),
+                                            );
+                                        final subcategories =
+                                            currentCategory.subcategories;
+
+                                        return Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: AppDropdownField<String>(
+                                                label: l10n.subcategory,
+                                                value:
+                                                    subcategories.contains(
+                                                      subcategoryCtrl.text,
+                                                    )
+                                                    ? subcategoryCtrl.text
+                                                    : null,
+                                                prefixIcon: Icons.label_outline,
+                                                items: subcategories
+                                                    .map(
+                                                      (name) =>
+                                                          DropdownMenuItem(
+                                                            value: name,
+                                                            child: Text(name),
+                                                          ),
+                                                    )
+                                                    .toList(),
+                                                onChanged: (val) {
+                                                  if (val != null) {
+                                                    setModalState(
+                                                      () =>
+                                                          subcategoryCtrl.text =
+                                                              val,
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            if (categoryCtrl.text.isNotEmpty)
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.add_circle_outline,
+                                                  color: AppColors.primary,
+                                                ),
+                                                onPressed: () =>
+                                                    _showQuickAddSubcategory(
+                                                      context,
+                                                      ref,
+                                                      l10n,
+                                                      currentCategory,
+                                                      subcategoryCtrl,
+                                                      setModalState,
+                                                    ),
+                                              ),
+                                          ],
+                                        );
+                                      },
+                                      loading: () => const SizedBox.shrink(),
+                                      error: (_, __) => const SizedBox.shrink(),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+                                AppTextField(
+                                  controller: noteCtrl,
+                                  label: l10n.note,
+                                  prefixIcon: Icons.note_outlined,
+                                  maxLines: 2,
+                                ),
+                                const SizedBox(height: 24),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 52,
+                                  child: ElevatedButton(
+                                    onPressed: isSaving
+                                        ? null
+                                        : () async {
+                                            if (formKey.currentState!
+                                                .validate()) {
+                                              setModalState(
+                                                () => isSaving = true,
+                                              );
+                                              try {
+                                                final item = StockItem(
+                                                  id: existingItem?.id ?? '',
+                                                  name: nameCtrl.text.trim(),
+                                                  buyPrice:
+                                                      double.tryParse(
+                                                        buyPriceCtrl.text,
+                                                      ) ??
+                                                      0,
+                                                  sellPrice:
+                                                      double.tryParse(
+                                                        sellPriceCtrl.text,
+                                                      ) ??
+                                                      0,
+                                                  quantity:
+                                                      double.tryParse(
+                                                        qtyCtrl.text,
+                                                      ) ??
+                                                      0,
+                                                  lowStockThreshold:
+                                                      double.tryParse(
+                                                        thresholdCtrl.text,
+                                                      ) ??
+                                                      5.0,
+                                                  unit: selectedUnit,
+                                                  category: categoryCtrl.text
+                                                      .trim(),
+                                                  subcategory:
+                                                      subcategoryCtrl.text
+                                                          .trim()
+                                                          .isEmpty
+                                                      ? null
+                                                      : subcategoryCtrl.text
+                                                            .trim(),
+                                                  date:
+                                                      existingItem?.date ??
+                                                      DateTime.now(),
+                                                  note:
+                                                      noteCtrl.text
+                                                          .trim()
+                                                          .isEmpty
+                                                      ? null
+                                                      : noteCtrl.text.trim(),
+                                                );
+
+                                                if (isEdit) {
+                                                  await ref
+                                                      .read(
+                                                        stockProvider.notifier,
+                                                      )
+                                                      .updateItem(item);
+                                                } else {
+                                                  await ref
+                                                      .read(
+                                                        stockProvider.notifier,
+                                                      )
+                                                      .addItem(item);
+                                                }
+
+                                                if (context.mounted) {
+                                                  Navigator.pop(context);
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        isEdit
+                                                            ? l10n.itemUpdated
+                                                            : l10n.itemAdded,
+                                                      ),
+                                                      backgroundColor:
+                                                          AppColors.success,
+                                                    ),
+                                                  );
+                                                }
+                                              } catch (e) {
+                                                if (context.mounted) {
+                                                  setModalState(
+                                                    () => isSaving = false,
+                                                  );
+                                                  String errorMsg =
+                                                      'Failed to save item';
+                                                  if (e is DioException) {
+                                                    errorMsg =
+                                                        e
+                                                            .response
+                                                            ?.data?['message'] ??
+                                                        e.message ??
+                                                        errorMsg;
+                                                  } else {
+                                                    errorMsg = e
+                                                        .toString()
+                                                        .replaceAll(
+                                                          'Exception:',
+                                                          '',
+                                                        )
+                                                        .trim();
+                                                  }
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(errorMsg),
+                                                      backgroundColor:
+                                                          AppColors.error,
+                                                    ),
+                                                  );
+                                                }
+                                              }
+                                            }
+                                          },
+                                    child: isSaving
+                                        ? const SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : Text(
+                                            isEdit ? l10n.update : l10n.save,
+                                          ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
+                );
               },
             );
           },

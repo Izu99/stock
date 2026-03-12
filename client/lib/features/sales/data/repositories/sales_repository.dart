@@ -19,27 +19,32 @@ class SalesRepositoryImpl implements SalesRepository {
   @override
   Future<List<Sale>> getSales() async {
     dev.log('📊 [SalesRepo] Fetching sales...');
-    final response = await _apiClient.dio.get('/sales');
+    final response = await _apiClient.dio.get('sales');
     final sales = (response.data as List).map((e) => Sale.fromJson(e)).toList();
     dev.log('✅ [SalesRepo] Fetched ${sales.length} sales');
     return sales;
   }
 
   @override
-  Future<Sale> createSale(String itemId, double quantity, {double? sellPrice}) async {
-    dev.log('🛒 [SalesRepo] Creating sale - itemId: $itemId, qty: $quantity, customPrice: $sellPrice');
+  Future<Sale> createSale(
+    String itemId,
+    double quantity, {
+    double? sellPrice,
+  }) async {
+    dev.log(
+      '🛒 [SalesRepo] Creating sale - itemId: $itemId, qty: $quantity, customPrice: $sellPrice',
+    );
     try {
-      final data = <String, dynamic>{
-        'itemId': itemId,
-        'quantity': quantity,
-      };
+      final data = <String, dynamic>{'itemId': itemId, 'quantity': quantity};
       if (sellPrice != null) {
         data['sellPrice'] = sellPrice;
       }
 
-      final response = await _apiClient.dio.post('/sales', data: data);
+      final response = await _apiClient.dio.post('sales', data: data);
       final sale = Sale.fromJson(response.data);
-      dev.log('✅ [SalesRepo] Sale created - id: ${sale.id}, item: ${sale.itemName}, subtotal: ${sale.subtotal}');
+      dev.log(
+        '✅ [SalesRepo] Sale created - id: ${sale.id}, item: ${sale.itemName}, subtotal: ${sale.subtotal}',
+      );
       return sale;
     } catch (e) {
       dev.log('❌ [SalesRepo] Error creating sale: $e');

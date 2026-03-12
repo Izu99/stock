@@ -13,25 +13,31 @@ class Stock extends _$Stock {
 
   Future<void> addItem(StockItem item) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(stockRepositoryProvider).addStockItem(item);
       return ref.read(stockRepositoryProvider).getStockItems();
     });
+    state = result;
+    if (result.hasError) throw result.error!;
   }
 
   Future<void> updateItem(StockItem item) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(stockRepositoryProvider).updateStockItem(item);
       return ref.read(stockRepositoryProvider).getStockItems();
     });
+    state = result;
+    if (result.hasError) throw result.error!;
   }
 
   Future<void> deleteItem(String id) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(stockRepositoryProvider).deleteStockItem(id);
       return ref.read(stockRepositoryProvider).getStockItems();
     });
+    state = result;
+    if (result.hasError) throw result.error!;
   }
 }

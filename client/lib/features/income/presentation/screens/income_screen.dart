@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../../data/models/income.dart';
@@ -18,9 +18,7 @@ class IncomeScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(l10n.income),
-      ),
+      appBar: AppBar(title: Text(l10n.income)),
       body: incomesAsync.when(
         data: (incomes) {
           if (incomes.isEmpty) {
@@ -66,8 +64,11 @@ class IncomeScreen extends ConsumerWidget {
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.account_balance_wallet,
-                          color: Colors.white, size: 24),
+                      child: const Icon(
+                        Icons.account_balance_wallet,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Column(
@@ -154,8 +155,11 @@ class IncomeScreen extends ConsumerWidget {
             color: const Color(0xFFEDE9FE),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Icon(Icons.attach_money_rounded,
-              color: Color(0xFF7C3AED), size: 22),
+          child: const Icon(
+            Icons.attach_money_rounded,
+            color: Color(0xFF7C3AED),
+            size: 22,
+          ),
         ),
         title: Text(
           income.title,
@@ -173,7 +177,10 @@ class IncomeScreen extends ConsumerWidget {
               const SizedBox(height: 4),
               Text(
                 income.note!,
-                style: GoogleFonts.inter(fontSize: 12, color: AppColors.textSecondary),
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -188,7 +195,9 @@ class IncomeScreen extends ConsumerWidget {
               Flexible(
                 child: Text(
                   'Rs. ${income.amount.toStringAsFixed(0)}',
-                  textAlign: Alignment.centerRight.x > 0 ? TextAlign.end : TextAlign.start,
+                  textAlign: Alignment.centerRight.x > 0
+                      ? TextAlign.end
+                      : TextAlign.start,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(
@@ -200,18 +209,31 @@ class IncomeScreen extends ConsumerWidget {
               ),
               const SizedBox(width: 2),
               PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert, size: 18, color: AppColors.textHint),
+                icon: const Icon(
+                  Icons.more_vert,
+                  size: 18,
+                  color: AppColors.textHint,
+                ),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(minWidth: 40),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     value: 'delete',
                     child: Row(
                       children: [
-                        const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
+                        const Icon(
+                          Icons.delete_outline,
+                          size: 18,
+                          color: AppColors.error,
+                        ),
                         const SizedBox(width: 8),
-                        Text(l10n.delete, style: const TextStyle(color: AppColors.error)),
+                        Text(
+                          l10n.delete,
+                          style: const TextStyle(color: AppColors.error),
+                        ),
                       ],
                     ),
                   ),
@@ -271,7 +293,10 @@ class IncomeScreen extends ConsumerWidget {
                       children: [
                         Text(
                           l10n.addIncome,
-                          style: GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700),
+                          style: GoogleFonts.inter(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         IconButton(
                           icon: const Icon(Icons.close),
@@ -292,7 +317,8 @@ class IncomeScreen extends ConsumerWidget {
                               controller: titleCtrl,
                               label: l10n.title,
                               prefixIcon: Icons.label_outline,
-                              validator: (v) => v == null || v.isEmpty ? l10n.required : null,
+                              validator: (v) =>
+                                  v == null || v.isEmpty ? l10n.required : null,
                             ),
                             const SizedBox(height: 16),
                             AppTextField(
@@ -300,12 +326,15 @@ class IncomeScreen extends ConsumerWidget {
                               label: l10n.amount,
                               prefixIcon: Icons.attach_money,
                               keyboardType: TextInputType.number,
-                              validator: (v) => v == null || v.isEmpty ? l10n.required : null,
+                              validator: (v) =>
+                                  v == null || v.isEmpty ? l10n.required : null,
                             ),
                             const SizedBox(height: 16),
                             AppTextField(
                               controller: TextEditingController(
-                                text: DateFormat('yyyy-MM-dd').format(selectedDate),
+                                text: DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(selectedDate),
                               ),
                               label: l10n.date,
                               prefixIcon: Icons.calendar_today_outlined,
@@ -339,13 +368,16 @@ class IncomeScreen extends ConsumerWidget {
                                     final income = Income(
                                       id: '',
                                       title: titleCtrl.text.trim(),
-                                      amount: double.tryParse(amountCtrl.text) ?? 0,
+                                      amount:
+                                          double.tryParse(amountCtrl.text) ?? 0,
                                       date: selectedDate,
                                       note: noteCtrl.text.trim().isEmpty
                                           ? null
                                           : noteCtrl.text.trim(),
                                     );
-                                    ref.read(incomesProvider.notifier).add(income);
+                                    ref
+                                        .read(incomesProvider.notifier)
+                                        .add(income);
                                     Navigator.pop(context);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(

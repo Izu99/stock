@@ -143,7 +143,10 @@ class QuickActionButton extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)],
+                    colors: [
+                      color.withValues(alpha: 0.15),
+                      color.withValues(alpha: 0.05),
+                    ],
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -282,7 +285,11 @@ class EmptyStateWidget extends StatelessWidget {
                 color: AppColors.primarySurface,
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: Icon(icon, size: 56, color: AppColors.primary.withValues(alpha: 0.5)),
+              child: Icon(
+                icon,
+                size: 56,
+                color: AppColors.primary.withValues(alpha: 0.5),
+              ),
             ),
             const SizedBox(height: 20),
             Text(
@@ -305,10 +312,7 @@ class EmptyStateWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
-            if (action != null) ...[
-              const SizedBox(height: 24),
-              action!,
-            ],
+            if (action != null) ...[const SizedBox(height: 24), action!],
           ],
         ),
       ),
@@ -321,11 +325,7 @@ class SectionHeader extends StatelessWidget {
   final String title;
   final Widget? trailing;
 
-  const SectionHeader({
-    super.key,
-    required this.title,
-    this.trailing,
-  });
+  const SectionHeader({super.key, required this.title, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -346,7 +346,7 @@ class SectionHeader extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );
@@ -360,6 +360,7 @@ class AppDropdownField<T> extends StatelessWidget {
   final List<DropdownMenuItem<T>> items;
   final ValueChanged<T?> onChanged;
   final IconData? prefixIcon;
+  final FormFieldValidator<T>? validator;
 
   const AppDropdownField({
     super.key,
@@ -368,14 +369,16 @@ class AppDropdownField<T> extends StatelessWidget {
     required this.items,
     required this.onChanged,
     this.prefixIcon,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
-      value: value,
+      initialValue: value,
       items: items,
       onChanged: onChanged,
+      validator: validator,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon, size: 20) : null,
@@ -390,11 +393,7 @@ class LanguageToggle extends StatelessWidget {
   final bool compact;
   final Color? backgroundColor;
 
-  const LanguageToggle({
-    super.key,
-    this.compact = false,
-    this.backgroundColor,
-  });
+  const LanguageToggle({super.key, this.compact = false, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -407,8 +406,8 @@ class LanguageToggle extends StatelessWidget {
             color: backgroundColor ?? Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: backgroundColor != null 
-                  ? Colors.white.withValues(alpha: 0.2) 
+              color: backgroundColor != null
+                  ? Colors.white.withValues(alpha: 0.2)
                   : AppColors.divider,
             ),
           ),

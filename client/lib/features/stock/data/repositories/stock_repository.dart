@@ -19,25 +19,28 @@ class StockRepositoryImpl implements StockRepository {
 
   @override
   Future<List<StockItem>> getStockItems() async {
-    final response = await _apiClient.dio.get('/stock');
+    final response = await _apiClient.dio.get('stock');
     return (response.data as List).map((e) => StockItem.fromJson(e)).toList();
   }
 
   @override
   Future<StockItem> addStockItem(StockItem item) async {
-    final response = await _apiClient.dio.post('/stock', data: item.toJson());
+    final response = await _apiClient.dio.post('stock', data: item.toJson());
     return StockItem.fromJson(response.data);
   }
 
   @override
   Future<StockItem> updateStockItem(StockItem item) async {
-    final response = await _apiClient.dio.put('/stock/${item.id}', data: item.toJson());
+    final response = await _apiClient.dio.put(
+      'stock/${item.id}',
+      data: item.toJson(),
+    );
     return StockItem.fromJson(response.data);
   }
 
   @override
   Future<void> deleteStockItem(String id) async {
-    await _apiClient.dio.delete('/stock/$id');
+    await _apiClient.dio.delete('stock/$id');
   }
 }
 

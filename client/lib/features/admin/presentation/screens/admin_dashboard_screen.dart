@@ -2,16 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../providers/admin_provider.dart';
 
-class AdminDashboardScreen extends ConsumerWidget {
+class AdminDashboardScreen extends ConsumerStatefulWidget {
   const AdminDashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AdminDashboardScreen> createState() =>
+      _AdminDashboardScreenState();
+}
+
+class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Auto-refresh summary when entering the dashboard
+    Future.microtask(() {
+      ref.refresh(companySummaryProvider.future);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final summaryAsync = ref.watch(companySummaryProvider);
 
@@ -34,7 +49,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                 ),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF1E293B), Color(0xFF0F172A)], // Darker admin theme
+                    colors: [
+                      Color(0xFF1E293B),
+                      Color(0xFF0F172A),
+                    ], // Darker admin theme
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -77,7 +95,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
-                            icon: const Icon(Icons.logout_rounded, color: Colors.white),
+                            icon: const Icon(
+                              Icons.logout_rounded,
+                              color: Colors.white,
+                            ),
                             onPressed: () => context.go('/login'),
                           ),
                         ),
@@ -106,7 +127,9 @@ class AdminDashboardScreen extends ConsumerWidget {
                                     l10n.totalCompanies,
                                     style: GoogleFonts.inter(
                                       fontSize: 14,
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 6),
@@ -128,7 +151,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(14),
                               ),
-                              child: const Icon(Icons.business_rounded, color: Colors.white),
+                              child: const Icon(
+                                Icons.business_rounded,
+                                color: Colors.white,
+                              ),
                             ),
                           ],
                         ),
@@ -205,7 +231,12 @@ class AdminDashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusCard(String title, String value, Color color, IconData icon) {
+  Widget _buildStatusCard(
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -313,7 +344,10 @@ class AdminDashboardScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textHint),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textHint,
+              ),
             ],
           ),
         ),

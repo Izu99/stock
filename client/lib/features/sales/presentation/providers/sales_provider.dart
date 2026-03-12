@@ -23,7 +23,9 @@ class SalesNotifier extends _$SalesNotifier {
     }
   }
 
-  Future<void> processCart(List<({String itemId, double quantity})> items) async {
+  Future<void> processCart(
+    List<({String itemId, double quantity})> items,
+  ) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(salesRepositoryProvider);

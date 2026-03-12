@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StockItem {
 
-@JsonKey(name: '_id') String get id; String? get companyId; String get name; double get buyPrice; double get sellPrice; double get quantity; ItemUnit get unit; String get category; String? get subcategory; DateTime get date; String? get note;
+@JsonKey(name: '_id') String get id; String? get companyId; String get name; double get buyPrice; double get sellPrice; double get quantity; double get lowStockThreshold; String? get barcode; ItemUnit get unit; String get category; String? get subcategory; DateTime get date; String? get note;
 /// Create a copy of StockItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $StockItemCopyWith<StockItem> get copyWith => _$StockItemCopyWithImpl<StockItem>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StockItem&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.name, name) || other.name == name)&&(identical(other.buyPrice, buyPrice) || other.buyPrice == buyPrice)&&(identical(other.sellPrice, sellPrice) || other.sellPrice == sellPrice)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StockItem&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.name, name) || other.name == name)&&(identical(other.buyPrice, buyPrice) || other.buyPrice == buyPrice)&&(identical(other.sellPrice, sellPrice) || other.sellPrice == sellPrice)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.lowStockThreshold, lowStockThreshold) || other.lowStockThreshold == lowStockThreshold)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,companyId,name,buyPrice,sellPrice,quantity,unit,category,subcategory,date,note);
+int get hashCode => Object.hash(runtimeType,id,companyId,name,buyPrice,sellPrice,quantity,lowStockThreshold,barcode,unit,category,subcategory,date,note);
 
 @override
 String toString() {
-  return 'StockItem(id: $id, companyId: $companyId, name: $name, buyPrice: $buyPrice, sellPrice: $sellPrice, quantity: $quantity, unit: $unit, category: $category, subcategory: $subcategory, date: $date, note: $note)';
+  return 'StockItem(id: $id, companyId: $companyId, name: $name, buyPrice: $buyPrice, sellPrice: $sellPrice, quantity: $quantity, lowStockThreshold: $lowStockThreshold, barcode: $barcode, unit: $unit, category: $category, subcategory: $subcategory, date: $date, note: $note)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $StockItemCopyWith<$Res>  {
   factory $StockItemCopyWith(StockItem value, $Res Function(StockItem) _then) = _$StockItemCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String? companyId, String name, double buyPrice, double sellPrice, double quantity, ItemUnit unit, String category, String? subcategory, DateTime date, String? note
+@JsonKey(name: '_id') String id, String? companyId, String name, double buyPrice, double sellPrice, double quantity, double lowStockThreshold, String? barcode, ItemUnit unit, String category, String? subcategory, DateTime date, String? note
 });
 
 
@@ -65,7 +65,7 @@ class _$StockItemCopyWithImpl<$Res>
 
 /// Create a copy of StockItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? companyId = freezed,Object? name = null,Object? buyPrice = null,Object? sellPrice = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? subcategory = freezed,Object? date = null,Object? note = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? companyId = freezed,Object? name = null,Object? buyPrice = null,Object? sellPrice = null,Object? quantity = null,Object? lowStockThreshold = null,Object? barcode = freezed,Object? unit = null,Object? category = null,Object? subcategory = freezed,Object? date = null,Object? note = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,9 @@ as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_no
 as String,buyPrice: null == buyPrice ? _self.buyPrice : buyPrice // ignore: cast_nullable_to_non_nullable
 as double,sellPrice: null == sellPrice ? _self.sellPrice : sellPrice // ignore: cast_nullable_to_non_nullable
 as double,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as double,lowStockThreshold: null == lowStockThreshold ? _self.lowStockThreshold : lowStockThreshold // ignore: cast_nullable_to_non_nullable
+as double,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
+as String?,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as ItemUnit,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String,subcategory: freezed == subcategory ? _self.subcategory : subcategory // ignore: cast_nullable_to_non_nullable
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
@@ -163,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId,  String name,  double buyPrice,  double sellPrice,  double quantity,  ItemUnit unit,  String category,  String? subcategory,  DateTime date,  String? note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId,  String name,  double buyPrice,  double sellPrice,  double quantity,  double lowStockThreshold,  String? barcode,  ItemUnit unit,  String category,  String? subcategory,  DateTime date,  String? note)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StockItem() when $default != null:
-return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPrice,_that.quantity,_that.unit,_that.category,_that.subcategory,_that.date,_that.note);case _:
+return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPrice,_that.quantity,_that.lowStockThreshold,_that.barcode,_that.unit,_that.category,_that.subcategory,_that.date,_that.note);case _:
   return orElse();
 
 }
@@ -184,10 +186,10 @@ return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPri
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId,  String name,  double buyPrice,  double sellPrice,  double quantity,  ItemUnit unit,  String category,  String? subcategory,  DateTime date,  String? note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId,  String name,  double buyPrice,  double sellPrice,  double quantity,  double lowStockThreshold,  String? barcode,  ItemUnit unit,  String category,  String? subcategory,  DateTime date,  String? note)  $default,) {final _that = this;
 switch (_that) {
 case _StockItem():
-return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPrice,_that.quantity,_that.unit,_that.category,_that.subcategory,_that.date,_that.note);case _:
+return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPrice,_that.quantity,_that.lowStockThreshold,_that.barcode,_that.unit,_that.category,_that.subcategory,_that.date,_that.note);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +206,10 @@ return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPri
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String? companyId,  String name,  double buyPrice,  double sellPrice,  double quantity,  ItemUnit unit,  String category,  String? subcategory,  DateTime date,  String? note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String? companyId,  String name,  double buyPrice,  double sellPrice,  double quantity,  double lowStockThreshold,  String? barcode,  ItemUnit unit,  String category,  String? subcategory,  DateTime date,  String? note)?  $default,) {final _that = this;
 switch (_that) {
 case _StockItem() when $default != null:
-return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPrice,_that.quantity,_that.unit,_that.category,_that.subcategory,_that.date,_that.note);case _:
+return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPrice,_that.quantity,_that.lowStockThreshold,_that.barcode,_that.unit,_that.category,_that.subcategory,_that.date,_that.note);case _:
   return null;
 
 }
@@ -219,7 +221,7 @@ return $default(_that.id,_that.companyId,_that.name,_that.buyPrice,_that.sellPri
 @JsonSerializable()
 
 class _StockItem implements StockItem {
-  const _StockItem({@JsonKey(name: '_id') required this.id, this.companyId, required this.name, required this.buyPrice, required this.sellPrice, required this.quantity, required this.unit, required this.category, this.subcategory, required this.date, this.note});
+  const _StockItem({@JsonKey(name: '_id') required this.id, this.companyId, required this.name, required this.buyPrice, required this.sellPrice, required this.quantity, this.lowStockThreshold = 5.0, this.barcode, required this.unit, required this.category, this.subcategory, required this.date, this.note});
   factory _StockItem.fromJson(Map<String, dynamic> json) => _$StockItemFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
@@ -228,6 +230,8 @@ class _StockItem implements StockItem {
 @override final  double buyPrice;
 @override final  double sellPrice;
 @override final  double quantity;
+@override@JsonKey() final  double lowStockThreshold;
+@override final  String? barcode;
 @override final  ItemUnit unit;
 @override final  String category;
 @override final  String? subcategory;
@@ -247,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StockItem&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.name, name) || other.name == name)&&(identical(other.buyPrice, buyPrice) || other.buyPrice == buyPrice)&&(identical(other.sellPrice, sellPrice) || other.sellPrice == sellPrice)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StockItem&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.name, name) || other.name == name)&&(identical(other.buyPrice, buyPrice) || other.buyPrice == buyPrice)&&(identical(other.sellPrice, sellPrice) || other.sellPrice == sellPrice)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.lowStockThreshold, lowStockThreshold) || other.lowStockThreshold == lowStockThreshold)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.subcategory, subcategory) || other.subcategory == subcategory)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,companyId,name,buyPrice,sellPrice,quantity,unit,category,subcategory,date,note);
+int get hashCode => Object.hash(runtimeType,id,companyId,name,buyPrice,sellPrice,quantity,lowStockThreshold,barcode,unit,category,subcategory,date,note);
 
 @override
 String toString() {
-  return 'StockItem(id: $id, companyId: $companyId, name: $name, buyPrice: $buyPrice, sellPrice: $sellPrice, quantity: $quantity, unit: $unit, category: $category, subcategory: $subcategory, date: $date, note: $note)';
+  return 'StockItem(id: $id, companyId: $companyId, name: $name, buyPrice: $buyPrice, sellPrice: $sellPrice, quantity: $quantity, lowStockThreshold: $lowStockThreshold, barcode: $barcode, unit: $unit, category: $category, subcategory: $subcategory, date: $date, note: $note)';
 }
 
 
@@ -267,7 +271,7 @@ abstract mixin class _$StockItemCopyWith<$Res> implements $StockItemCopyWith<$Re
   factory _$StockItemCopyWith(_StockItem value, $Res Function(_StockItem) _then) = __$StockItemCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String? companyId, String name, double buyPrice, double sellPrice, double quantity, ItemUnit unit, String category, String? subcategory, DateTime date, String? note
+@JsonKey(name: '_id') String id, String? companyId, String name, double buyPrice, double sellPrice, double quantity, double lowStockThreshold, String? barcode, ItemUnit unit, String category, String? subcategory, DateTime date, String? note
 });
 
 
@@ -284,7 +288,7 @@ class __$StockItemCopyWithImpl<$Res>
 
 /// Create a copy of StockItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? companyId = freezed,Object? name = null,Object? buyPrice = null,Object? sellPrice = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? subcategory = freezed,Object? date = null,Object? note = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? companyId = freezed,Object? name = null,Object? buyPrice = null,Object? sellPrice = null,Object? quantity = null,Object? lowStockThreshold = null,Object? barcode = freezed,Object? unit = null,Object? category = null,Object? subcategory = freezed,Object? date = null,Object? note = freezed,}) {
   return _then(_StockItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
@@ -292,7 +296,9 @@ as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_no
 as String,buyPrice: null == buyPrice ? _self.buyPrice : buyPrice // ignore: cast_nullable_to_non_nullable
 as double,sellPrice: null == sellPrice ? _self.sellPrice : sellPrice // ignore: cast_nullable_to_non_nullable
 as double,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as double,lowStockThreshold: null == lowStockThreshold ? _self.lowStockThreshold : lowStockThreshold // ignore: cast_nullable_to_non_nullable
+as double,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
+as String?,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as ItemUnit,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String,subcategory: freezed == subcategory ? _self.subcategory : subcategory // ignore: cast_nullable_to_non_nullable
 as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable

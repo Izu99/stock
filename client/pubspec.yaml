@@ -1,4 +1,4 @@
-name: Stock
+name: stock
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -23,6 +23,13 @@ dependencies:
   riverpod: ^3.1.0
   riverpod_annotation: ^4.0.0
   shared_preferences: ^2.5.4
+  mobile_scanner: ^5.2.3
+  pdf: ^3.11.1
+  csv: ^6.0.0
+  path_provider: ^2.1.5
+  share_plus: ^10.1.2
+  google_sign_in: 7.2.0
+  font_awesome_flutter: 10.7.0
 
 dev_dependencies:
   flutter_test:

@@ -16,7 +16,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
   @override
   Future<DashboardSummary> getSummary() async {
-    final response = await _apiClient.dio.get('/dashboard/summary');
+    final response = await _apiClient.dio.get('dashboard/summary');
     return DashboardSummary.fromJson(response.data);
   }
 }

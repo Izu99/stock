@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../../../dashboard/presentation/providers/dashboard_provider.dart';
@@ -42,10 +42,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
       appBar: AppBar(
         title: Text(l10n.reports),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.share_outlined),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}),
           const SizedBox(width: 8),
         ],
         bottom: PreferredSize(
@@ -56,7 +53,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.divider.withValues(alpha: 0.5)),
+              border: Border.all(
+                color: AppColors.divider.withValues(alpha: 0.5),
+              ),
             ),
             child: TabBar(
               controller: _tabController,
@@ -74,8 +73,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
               indicatorSize: TabBarIndicatorSize.tab,
               labelColor: AppColors.primary,
               unselectedLabelColor: AppColors.textSecondary,
-              labelStyle: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 13),
-              unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 13),
+              labelStyle: GoogleFonts.inter(
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+              unselectedLabelStyle: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
+              ),
               dividerColor: Colors.transparent,
               tabs: [
                 Tab(text: l10n.dailyReport),
@@ -103,7 +108,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
           title: l10n.error,
           subtitle: err.toString(),
           action: ElevatedButton.icon(
-            onPressed: () => ref.read(dashboardSummaryProvider.notifier).refresh(),
+            onPressed: () =>
+                ref.read(dashboardSummaryProvider.notifier).refresh(),
             icon: const Icon(Icons.refresh, size: 18),
             label: Text(l10n.retry),
           ),
@@ -154,7 +160,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 title: l10n.netProfit,
                 value: 'Rs. ${summary.profit.toStringAsFixed(0)}',
                 icon: Icons.star_rounded,
-                color: summary.profit >= 0 ? AppColors.success : AppColors.error,
+                color: summary.profit >= 0
+                    ? AppColors.success
+                    : AppColors.error,
               ),
             ],
           ),
@@ -185,19 +193,25 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                       centerSpaceRadius: 50,
                       sections: [
                         PieChartSectionData(
-                          value: summary.todaySales > 0 ? summary.todaySales : 1,
+                          value: summary.todaySales > 0
+                              ? summary.todaySales
+                              : 1,
                           color: AppColors.primary,
                           title: '',
                           radius: 50,
                         ),
                         PieChartSectionData(
-                          value: summary.totalExpenses > 0 ? summary.totalExpenses : 1,
+                          value: summary.totalExpenses > 0
+                              ? summary.totalExpenses
+                              : 1,
                           color: AppColors.error,
                           title: '',
                           radius: 40,
                         ),
                         PieChartSectionData(
-                          value: summary.otherIncome > 0 ? summary.otherIncome : 1,
+                          value: summary.otherIncome > 0
+                              ? summary.otherIncome
+                              : 1,
                           color: const Color(0xFF7C3AED),
                           title: '',
                           radius: 30,
@@ -252,13 +266,19 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 Positioned(
                   right: -20,
                   top: -20,
-                  child: Icon(Icons.analytics_rounded, size: 100, color: Colors.white.withValues(alpha: 0.1)),
+                  child: Icon(
+                    Icons.analytics_rounded,
+                    size: 100,
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      DateFormat('MMMM yyyy').format(DateTime.now()).toUpperCase(),
+                      DateFormat(
+                        'MMMM yyyy',
+                      ).format(DateTime.now()).toUpperCase(),
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
@@ -293,25 +313,45 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
 
           // Detail Rows
           SectionHeader(title: 'Breakdown'),
-          _buildDetailRow(l10n.totalSales, 'Rs. ${summary.monthlySales.toStringAsFixed(0)}',
-              Icons.trending_up_rounded, AppColors.primary),
-          _buildDetailRow(l10n.totalExpenses, 'Rs. ${summary.totalExpenses.toStringAsFixed(0)}',
-              Icons.trending_down_rounded, AppColors.error),
-          _buildDetailRow(l10n.otherIncome, 'Rs. ${summary.otherIncome.toStringAsFixed(0)}',
-              Icons.account_balance_wallet_outlined, const Color(0xFF7C3AED)),
-          _buildDetailRow(l10n.totalStockValue, 'Rs. ${summary.totalStockValue.toStringAsFixed(0)}',
-              Icons.inventory_2_outlined, const Color(0xFFFF6B35)),
+          _buildDetailRow(
+            l10n.totalSales,
+            'Rs. ${summary.monthlySales.toStringAsFixed(0)}',
+            Icons.trending_up_rounded,
+            AppColors.primary,
+          ),
+          _buildDetailRow(
+            l10n.totalExpenses,
+            'Rs. ${summary.totalExpenses.toStringAsFixed(0)}',
+            Icons.trending_down_rounded,
+            AppColors.error,
+          ),
+          _buildDetailRow(
+            l10n.otherIncome,
+            'Rs. ${summary.otherIncome.toStringAsFixed(0)}',
+            Icons.account_balance_wallet_outlined,
+            const Color(0xFF7C3AED),
+          ),
+          _buildDetailRow(
+            l10n.totalStockValue,
+            'Rs. ${summary.totalStockValue.toStringAsFixed(0)}',
+            Icons.inventory_2_outlined,
+            const Color(0xFFFF6B35),
+          ),
 
           const SizedBox(height: 24),
-          
+
           // Profit Insight
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: summary.profit >= 0 ? AppColors.success.withValues(alpha: 0.05) : AppColors.error.withValues(alpha: 0.05),
+              color: summary.profit >= 0
+                  ? AppColors.success.withValues(alpha: 0.05)
+                  : AppColors.error.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: (summary.profit >= 0 ? AppColors.success : AppColors.error).withValues(alpha: 0.1),
+                color:
+                    (summary.profit >= 0 ? AppColors.success : AppColors.error)
+                        .withValues(alpha: 0.1),
               ),
             ),
             child: Row(
@@ -319,12 +359,20 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: (summary.profit >= 0 ? AppColors.success : AppColors.error).withValues(alpha: 0.1),
+                    color:
+                        (summary.profit >= 0
+                                ? AppColors.success
+                                : AppColors.error)
+                            .withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    summary.profit >= 0 ? Icons.north_east_rounded : Icons.south_east_rounded,
-                    color: summary.profit >= 0 ? AppColors.success : AppColors.error,
+                    summary.profit >= 0
+                        ? Icons.north_east_rounded
+                        : Icons.south_east_rounded,
+                    color: summary.profit >= 0
+                        ? AppColors.success
+                        : AppColors.error,
                     size: 24,
                   ),
                 ),
@@ -346,7 +394,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                         style: GoogleFonts.inter(
                           fontSize: 24,
                           fontWeight: FontWeight.w800,
-                          color: summary.profit >= 0 ? AppColors.success : AppColors.error,
+                          color: summary.profit >= 0
+                              ? AppColors.success
+                              : AppColors.error,
                         ),
                       ),
                     ],
@@ -380,7 +430,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
             context: context,
             firstDate: DateTime(2020),
             lastDate: DateTime.now(),
-            initialDateRange: _customRange ??
+            initialDateRange:
+                _customRange ??
                 DateTimeRange(
                   start: DateTime.now().subtract(const Duration(days: 7)),
                   end: DateTime.now(),
@@ -398,7 +449,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 color: AppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.calendar_today_rounded, size: 20, color: AppColors.primary),
+              child: const Icon(
+                Icons.calendar_today_rounded,
+                size: 20,
+                color: AppColors.primary,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -407,28 +462,47 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
                 children: [
                   Text(
                     l10n.filterByDate,
-                    style: GoogleFonts.inter(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   Text(
                     _customRange != null
                         ? '${DateFormat('MMM dd, yyyy').format(_customRange!.start)} - ${DateFormat('MMM dd, yyyy').format(_customRange!.end)}'
                         : 'Today - Select Range',
-                    style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                 ],
               ),
             ),
             if (_customRange != null)
-              IconButton(icon: const Icon(Icons.close, size: 20), onPressed: () => setState(() => _customRange = null))
+              IconButton(
+                icon: const Icon(Icons.close, size: 20),
+                onPressed: () => setState(() => _customRange = null),
+              )
             else
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textHint),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textHint,
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String value, IconData icon, Color color) {
+  Widget _buildDetailRow(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -477,10 +551,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen>
         Container(
           width: 10,
           height: 10,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
         Text(

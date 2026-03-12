@@ -16,7 +16,8 @@ abstract class Company with _$Company {
     DateTime? createdAt,
   }) = _Company;
 
-  factory Company.fromJson(Map<String, dynamic> json) => _$CompanyFromJson(json);
+  factory Company.fromJson(Map<String, dynamic> json) =>
+      _$CompanyFromJson(json);
 }
 
 @freezed

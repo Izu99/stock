@@ -5,9 +5,13 @@ const {
   getCompanies,
   getCompanySummary,
   updateCompanyStatus,
-  deleteCompany
+  updateCompany,
+  deleteCompany,
+  checkAvailability
 } = require('../controllers/companyController');
 const { protect } = require('../middleware/authMiddleware');
+
+router.get('/check-availability', protect, checkAvailability);
 
 router.route('/')
   .get(protect, getCompanies)
@@ -19,6 +23,7 @@ router.route('/:id/status')
   .patch(protect, updateCompanyStatus);
 
 router.route('/:id')
+  .put(protect, updateCompany)
   .delete(protect, deleteCompany);
 
 module.exports = router;

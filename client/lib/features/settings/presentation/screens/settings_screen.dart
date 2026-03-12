@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/app_widgets.dart';
 import '../../../../core/utils/locale_controller.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
@@ -17,9 +16,7 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(l10n.settings),
-      ),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ListenableBuilder(
         listenable: localeController,
         builder: (context, child) {
@@ -86,6 +83,34 @@ class SettingsScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
+              // Preferences Section
+              _buildSectionTitle(l10n.language),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.divider.withValues(alpha: 0.5),
+                  ),
+                ),
+                child: _buildSettingsTile(
+                  icon: Icons.language_rounded,
+                  iconColor: AppColors.primary,
+                  title: localeController.locale.languageCode == 'en'
+                      ? 'English'
+                      : 'සිංහල',
+                  trailing: Switch.adaptive(
+                    value: localeController.locale.languageCode == 'si',
+                    activeColor: AppColors.primary,
+                    onChanged: (isSinhala) {
+                      localeController.setLocale(
+                        Locale(isSinhala ? 'si' : 'en'),
+                      );
+                    },
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 24),
 
@@ -97,7 +122,9 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.divider.withValues(alpha: 0.5)),
+                  border: Border.all(
+                    color: AppColors.divider.withValues(alpha: 0.5),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -243,15 +270,17 @@ class SettingsScreen extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (trailing != null) trailing!,
+              ?trailing,
               if (showArrow)
-                const Icon(Icons.chevron_right_rounded,
-                    color: AppColors.textHint, size: 22),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.textHint,
+                  size: 22,
+                ),
             ],
           ),
         ),
       ),
     );
   }
-
 }

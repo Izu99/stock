@@ -1,7 +1,7 @@
 {
   "appTitle": "තොග කළමනාකරු",
   "login": "පිවිසෙන්න",
-  "username": "පරිශීලක නාමය",
+  "username": "පරිශීලක නාමය, ඊමේල් හෝ දුරකථන අංකය",
   "password": "මුරපදය",
   "dashboard": "ප්‍රධාන පුවරුව",
   "stock": "තොග",
@@ -90,7 +90,8 @@
   "goodAfternoon": "සුභ දහවලක්",
   "goodEvening": "සුභ සන්ධ්‍යාවක්",
   "admin": "පරිපාලක",
-  "staff": "කාර්ය මණ්ඩලය",
+  "staff": "පාරිභෝගිකයා",
+  "company": "සමාගම",
   "companies": "සමාගම්",
   "addCompany": "සමාගමක් එක් කරන්න",
   "companyName": "සමාගම් නම",
@@ -142,7 +143,16 @@
   "errorRequired": "අවශ්‍යයි",
   "actionDelete": "මකන්න",
   "actionCancel": "අවලංගු කරන්න",
+  "actionEdit": "සංස්කරණය කරන්න",
   "msgDeleteCompany": "ඔබට මෙය මැකීමට අවශ්‍ය බව විශ්වාසද",
-  "serverError": "සේවාදායක දෝෂයකි. කරුණාකර නැවත උත්සාහ කරන්න.",
-  "usernameError": "පරිශීලක නාමය තනි වචනයක් විය යුතුය (හිස්තැන් නැත)"
-}
+  "serverError": "සේවාදායකයේ දෝෂයකි. කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
+  "usernameError": "පරිශීලක නාමය තනි වචනයක් විය යුතුය (හිස්තැන් නොමැතිව)",
+  "recentTransactions": "මෑත ගනුදෙනු",
+  "businessPerformance": "ව්‍යාපාර කාර්ය සාධනය",
+  "lowStockAlert": "අඩු තොග අනතුරු ඇඟවීම",
+  "viewAll": "සියල්ල බලන්න",
+  "noRecentActivity": "මෑත කාලීන ක්‍රියාකාරකම් නොමැත",
+  "addStock": "තොග එකතු කරන්න",
+  "itemsLowStock": "භාණ්ඩ ප්‍රමාණය අඩු වෙමින් පවතී",
+  "categories": "ප්‍රවර්ග"
+  }

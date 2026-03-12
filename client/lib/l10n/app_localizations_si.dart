@@ -15,7 +15,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get login => 'පිවිසෙන්න';
 
   @override
-  String get username => 'පරිශීලක නාමය';
+  String get username => 'පරිශීලක නාමය, ඊමේල් හෝ දුරකථන අංකය';
 
   @override
   String get password => 'මුරපදය';
@@ -282,7 +282,10 @@ class AppLocalizationsSi extends AppLocalizations {
   String get admin => 'පරිපාලක';
 
   @override
-  String get staff => 'කාර්ය මණ්ඩලය';
+  String get staff => 'පාරිභෝගිකයා';
+
+  @override
+  String get company => 'සමාගම';
 
   @override
   String get companies => 'සමාගම්';
@@ -432,12 +435,40 @@ class AppLocalizationsSi extends AppLocalizations {
   String get actionCancel => 'අවලංගු කරන්න';
 
   @override
+  String get actionEdit => 'සංස්කරණය කරන්න';
+
+  @override
   String get msgDeleteCompany => 'ඔබට මෙය මැකීමට අවශ්‍ය බව විශ්වාසද';
 
   @override
-  String get serverError => 'සේවාදායක දෝෂයකි. කරුණාකර නැවත උත්සාහ කරන්න.';
+  String get serverError =>
+      'සේවාදායකයේ දෝෂයකි. කරුණාකර පසුව නැවත උත්සාහ කරන්න.';
 
   @override
   String get usernameError =>
-      'පරිශීලක නාමය තනි වචනයක් විය යුතුය (හිස්තැන් නැත)';
+      'පරිශීලක නාමය තනි වචනයක් විය යුතුය (හිස්තැන් නොමැතිව)';
+
+  @override
+  String get recentTransactions => 'මෑත ගනුදෙනු';
+
+  @override
+  String get businessPerformance => 'ව්‍යාපාර කාර්ය සාධනය';
+
+  @override
+  String get lowStockAlert => 'අඩු තොග අනතුරු ඇඟවීම';
+
+  @override
+  String get viewAll => 'සියල්ල බලන්න';
+
+  @override
+  String get noRecentActivity => 'මෑත කාලීන ක්‍රියාකාරකම් නොමැත';
+
+  @override
+  String get addStock => 'තොග එකතු කරන්න';
+
+  @override
+  String get itemsLowStock => 'භාණ්ඩ ප්‍රමාණය අඩු වෙමින් පවතී';
+
+  @override
+  String get categories => 'ප්‍රවර්ග';
 }

@@ -19,25 +19,31 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
 
   @override
   Future<List<Expense>> getExpenses() async {
-    final response = await _apiClient.dio.get('/expenses');
+    final response = await _apiClient.dio.get('expenses');
     return (response.data as List).map((e) => Expense.fromJson(e)).toList();
   }
 
   @override
   Future<Expense> addExpense(Expense expense) async {
-    final response = await _apiClient.dio.post('/expenses', data: expense.toJson());
+    final response = await _apiClient.dio.post(
+      'expenses',
+      data: expense.toJson(),
+    );
     return Expense.fromJson(response.data);
   }
 
   @override
   Future<Expense> updateExpense(Expense expense) async {
-    final response = await _apiClient.dio.put('/expenses/${expense.id}', data: expense.toJson());
+    final response = await _apiClient.dio.put(
+      'expenses/${expense.id}',
+      data: expense.toJson(),
+    );
     return Expense.fromJson(response.data);
   }
 
   @override
   Future<void> deleteExpense(String id) async {
-    await _apiClient.dio.delete('/expenses/$id');
+    await _apiClient.dio.delete('expenses/$id');
   }
 }
 

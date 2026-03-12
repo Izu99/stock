@@ -26,7 +26,7 @@ final class CompanySummaryProvider
         argument: null,
         retry: null,
         name: r'companySummaryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -46,7 +46,7 @@ final class CompanySummaryProvider
   }
 }
 
-String _$companySummaryHash() => r'6f03dc4d202a11dcd8a413711d9b235d4301a2eb';
+String _$companySummaryHash() => r'dcbfb157cb628e1a81086e379ce2ea7731f01397';
 
 @ProviderFor(Companies)
 final companiesProvider = CompaniesProvider._();
@@ -72,7 +72,7 @@ final class CompaniesProvider
   Companies create() => Companies();
 }
 
-String _$companiesHash() => r'efed8e23dc0bba36455dd500f8a8a4f49287689b';
+String _$companiesHash() => r'187aea52d932153620c05c13f494ee6ab6a0b98f';
 
 abstract class _$Companies extends $AsyncNotifier<List<Company>> {
   FutureOr<List<Company>> build();

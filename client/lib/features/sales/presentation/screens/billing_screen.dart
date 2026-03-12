@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_widgets.dart';
 import '../../../stock/data/models/stock_item.dart';
@@ -18,8 +18,8 @@ class _CartItem {
   double get subtotal => sellPrice * quantity;
   double get profit => (sellPrice - stockItem.buyPrice) * quantity;
 
-  _CartItem({required this.stockItem, this.quantity = 1})
-      : sellPrice = stockItem.sellPrice;
+  _CartItem({required this.stockItem, this.quantity = 1.0})
+    : sellPrice = stockItem.sellPrice;
 }
 
 class BillingScreen extends ConsumerStatefulWidget {
@@ -136,7 +136,9 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: controller,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
               ],
@@ -240,7 +242,9 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: controller,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
               ],
@@ -295,17 +299,23 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
     try {
       final repo = ref.read(salesRepositoryProvider);
 
-      dev.log('🛒 [BillingScreen] Starting sale processing with ${_cart.length} items');
+      dev.log(
+        '🛒 [BillingScreen] Starting sale processing with ${_cart.length} items',
+      );
 
       for (final cartItem in _cart) {
-        dev.log('📦 [BillingScreen] Selling: ${cartItem.stockItem.name} '
-            'x${cartItem.quantity} @ Rs.${cartItem.sellPrice}');
+        dev.log(
+          '📦 [BillingScreen] Selling: ${cartItem.stockItem.name} '
+          'x${cartItem.quantity} @ Rs.${cartItem.sellPrice}',
+        );
         await repo.createSale(
           cartItem.stockItem.id,
           cartItem.quantity,
           sellPrice: cartItem.sellPrice,
         );
-        dev.log('✅ [BillingScreen] Sale created for: ${cartItem.stockItem.name}');
+        dev.log(
+          '✅ [BillingScreen] Sale created for: ${cartItem.stockItem.name}',
+        );
       }
 
       dev.log('🎉 [BillingScreen] All sales processed successfully');
@@ -384,7 +394,9 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.08),
@@ -407,7 +419,9 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                     l10n.profit,
                     'Rs. ${_totalProfit.toStringAsFixed(2)}',
                     isTotal: false,
-                    color: _totalProfit >= 0 ? AppColors.success : AppColors.error,
+                    color: _totalProfit >= 0
+                        ? AppColors.success
+                        : AppColors.error,
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
@@ -438,7 +452,10 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.check_circle_outline, size: 20),
+                                const Icon(
+                                  Icons.check_circle_outline,
+                                  size: 20,
+                                ),
                                 const SizedBox(width: 8),
                                 Text(l10n.checkout),
                               ],
@@ -458,7 +475,11 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
     );
   }
 
-  Widget _buildCartItemCard(_CartItem cartItem, int index, AppLocalizations l10n) {
+  Widget _buildCartItemCard(
+    _CartItem cartItem,
+    int index,
+    AppLocalizations l10n,
+  ) {
     final priceChanged = cartItem.sellPrice != cartItem.stockItem.sellPrice;
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -468,8 +489,8 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: priceChanged
-            ? AppColors.warning.withValues(alpha: 0.5)
-            : AppColors.divider.withValues(alpha: 0.5),
+              ? AppColors.warning.withValues(alpha: 0.5)
+              : AppColors.divider.withValues(alpha: 0.5),
         ),
       ),
       child: Column(
@@ -500,7 +521,9 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                           Icon(
                             Icons.edit_outlined,
                             size: 12,
-                            color: priceChanged ? AppColors.warning : AppColors.textHint,
+                            color: priceChanged
+                                ? AppColors.warning
+                                : AppColors.textHint,
                           ),
                           const SizedBox(width: 4),
                           Flexible(
@@ -509,7 +532,9 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                               style: GoogleFonts.inter(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                color: priceChanged ? AppColors.warning : AppColors.textSecondary,
+                                color: priceChanged
+                                    ? AppColors.warning
+                                    : AppColors.textSecondary,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -552,7 +577,10 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Text(
                           cartItem.quantity.toStringAsFixed(
-                            cartItem.quantity == cartItem.quantity.roundToDouble() ? 0 : 1,
+                            cartItem.quantity ==
+                                    cartItem.quantity.roundToDouble()
+                                ? 0
+                                : 1,
                           ),
                           style: GoogleFonts.inter(
                             fontSize: 14,
@@ -613,8 +641,12 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value,
-      {bool isTotal = false, Color? color}) {
+  Widget _buildSummaryRow(
+    String label,
+    String value, {
+    bool isTotal = false,
+    Color? color,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -636,7 +668,8 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
           style: GoogleFonts.inter(
             fontSize: isTotal ? 22 : 15,
             fontWeight: FontWeight.w700,
-            color: color ?? (isTotal ? AppColors.primary : AppColors.textPrimary),
+            color:
+                color ?? (isTotal ? AppColors.primary : AppColors.textPrimary),
           ),
         ),
       ],
@@ -739,13 +772,18 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                         style: GoogleFonts.inter(fontSize: 15),
                         decoration: InputDecoration(
                           hintText: l10n.search,
-                          prefixIcon: const Icon(Icons.search_rounded,
-                              size: 20, color: AppColors.textHint),
+                          prefixIcon: const Icon(
+                            Icons.search_rounded,
+                            size: 20,
+                            color: AppColors.textHint,
+                          ),
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 14),
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
                         ),
                         onChanged: (v) {
                           setSheetState(() => _searchQuery = v);
@@ -758,9 +796,11 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                     child: stockAsync.when(
                       data: (items) {
                         final list = (items as List<StockItem>)
-                            .where((i) => i.name
-                                .toLowerCase()
-                                .contains(_searchQuery.toLowerCase()))
+                            .where(
+                              (i) => i.name.toLowerCase().contains(
+                                _searchQuery.toLowerCase(),
+                              ),
+                            )
                             .toList();
                         return ListView.builder(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -772,30 +812,40 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                               (c) => c.stockItem.id == item.id,
                             );
                             final inCart = cartIndex != -1;
-                            final cartQty = inCart ? _cart[cartIndex].quantity : 0.0;
+                            final cartQty = inCart
+                                ? _cart[cartIndex].quantity
+                                : 0.0;
 
                             return Container(
                               margin: const EdgeInsets.only(bottom: 6),
                               decoration: BoxDecoration(
                                 color: inCart
-                                    ? AppColors.primarySurface.withValues(alpha: 0.3)
+                                    ? AppColors.primarySurface.withValues(
+                                        alpha: 0.3,
+                                      )
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(12),
                                 border: inCart
                                     ? Border.all(
-                                        color: AppColors.primary.withValues(alpha: 0.3),
+                                        color: AppColors.primary.withValues(
+                                          alpha: 0.3,
+                                        ),
                                       )
                                     : null,
                               ),
                               child: ListTile(
                                 contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 4),
+                                  horizontal: 12,
+                                  vertical: 4,
+                                ),
                                 leading: Container(
                                   width: 42,
                                   height: 42,
                                   decoration: BoxDecoration(
                                     color: inCart
-                                        ? AppColors.primary.withValues(alpha: 0.15)
+                                        ? AppColors.primary.withValues(
+                                            alpha: 0.15,
+                                          )
                                         : AppColors.primarySurface,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -814,8 +864,11 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                                             ),
                                           ),
                                         )
-                                      : const Icon(Icons.inventory_2_outlined,
-                                          color: AppColors.primary, size: 20),
+                                      : const Icon(
+                                          Icons.inventory_2_outlined,
+                                          color: AppColors.primary,
+                                          size: 20,
+                                        ),
                                 ),
                                 title: Text(
                                   item.name,
@@ -852,7 +905,9 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                         );
                       },
                       loading: () => const Center(
-                        child: CircularProgressIndicator(color: AppColors.primary),
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
                       ),
                       error: (e, _) => Center(child: Text('Error: $e')),
                     ),

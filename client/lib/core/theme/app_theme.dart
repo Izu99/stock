@@ -73,10 +73,58 @@ class AppTheme {
       error: AppColors.error,
     ),
     scaffoldBackgroundColor: AppColors.background,
-    textTheme: GoogleFonts.interTextTheme().apply(
-      bodyColor: AppColors.textPrimary,
-      displayColor: AppColors.textPrimary,
-    ),
+    textTheme: GoogleFonts.interTextTheme()
+        .copyWith(
+          bodyLarge: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().bodyLarge,
+          ),
+          bodyMedium: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().bodyMedium,
+          ),
+          bodySmall: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().bodySmall,
+          ),
+          displayLarge: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().displayLarge,
+          ),
+          displayMedium: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().displayMedium,
+          ),
+          displaySmall: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().displaySmall,
+          ),
+          headlineLarge: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().headlineLarge,
+          ),
+          headlineMedium: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().headlineMedium,
+          ),
+          headlineSmall: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().headlineSmall,
+          ),
+          titleLarge: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().titleLarge,
+          ),
+          titleMedium: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().titleMedium,
+          ),
+          titleSmall: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().titleSmall,
+          ),
+          labelLarge: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().labelLarge,
+          ),
+          labelMedium: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().labelMedium,
+          ),
+          labelSmall: GoogleFonts.notoSansSinhala(
+            textStyle: GoogleFonts.interTextTheme().labelSmall,
+          ),
+        )
+        .apply(
+          bodyColor: AppColors.textPrimary,
+          displayColor: AppColors.textPrimary,
+        ),
     appBarTheme: AppBarTheme(
       centerTitle: false,
       elevation: 0,
@@ -105,32 +153,22 @@ class AppTheme {
         foregroundColor: Colors.white,
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        textStyle: GoogleFonts.inter(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         side: const BorderSide(color: AppColors.primary),
-        textStyle: GoogleFonts.inter(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.surface,
+      fillColor: Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -149,7 +187,10 @@ class AppTheme {
         borderSide: const BorderSide(color: AppColors.error),
       ),
       hintStyle: GoogleFonts.inter(color: AppColors.textHint, fontSize: 14),
-      labelStyle: GoogleFonts.inter(color: AppColors.textSecondary, fontSize: 14),
+      labelStyle: GoogleFonts.inter(
+        color: AppColors.textSecondary,
+        fontSize: 14,
+      ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
@@ -173,21 +214,15 @@ class AppTheme {
       selectedColor: AppColors.primary,
       labelStyle: GoogleFonts.inter(fontSize: 13),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     ),
     dialogTheme: DialogThemeData(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       surfaceTintColor: Colors.transparent,
     ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   );
 
@@ -233,13 +268,8 @@ class AppTheme {
         foregroundColor: Colors.white,
         elevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        textStyle: GoogleFonts.inter(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -266,16 +296,12 @@ class AppTheme {
       shape: CircleBorder(),
     ),
     dialogTheme: DialogThemeData(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       surfaceTintColor: Colors.transparent,
     ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   );
 }

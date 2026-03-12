@@ -34,6 +34,8 @@ _DashboardSummary _$DashboardSummaryFromJson(Map<String, dynamic> json) =>
       totalExpenses: (json['totalExpenses'] as num).toDouble(),
       otherIncome: (json['otherIncome'] as num).toDouble(),
       profit: (json['profit'] as num).toDouble(),
+      totalItems: (json['totalItems'] as num?)?.toInt() ?? 0,
+      lowStockCount: (json['lowStockCount'] as num?)?.toInt() ?? 0,
       recentTransactions:
           (json['recentTransactions'] as List<dynamic>?)
               ?.map(
@@ -41,6 +43,12 @@ _DashboardSummary _$DashboardSummaryFromJson(Map<String, dynamic> json) =>
               )
               .toList() ??
           const [],
+      salesHistory: (json['salesHistory'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
+      topItems: (json['topItems'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
+          .toList(),
     );
 
 Map<String, dynamic> _$DashboardSummaryToJson(_DashboardSummary instance) =>
@@ -51,5 +59,9 @@ Map<String, dynamic> _$DashboardSummaryToJson(_DashboardSummary instance) =>
       'totalExpenses': instance.totalExpenses,
       'otherIncome': instance.otherIncome,
       'profit': instance.profit,
+      'totalItems': instance.totalItems,
+      'lowStockCount': instance.lowStockCount,
       'recentTransactions': instance.recentTransactions,
+      'salesHistory': instance.salesHistory,
+      'topItems': instance.topItems,
     };

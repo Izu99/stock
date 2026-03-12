@@ -13,7 +13,16 @@ class Auth extends _$Auth {
 
   Future<void> login(String username, String password) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() => ref.read(authRepositoryProvider).login(username, password));
+    state = await AsyncValue.guard(
+      () => ref.read(authRepositoryProvider).login(username, password),
+    );
+  }
+
+  Future<void> loginWithGoogle() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => ref.read(authRepositoryProvider).loginWithGoogle(),
+    );
   }
 
   Future<void> logout() async {

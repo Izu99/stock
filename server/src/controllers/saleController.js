@@ -1,36 +1,35 @@
 const Sale = require('../models/Sale');
 const StockItem = require('../models/StockItem');
+const StockMovement = require('../models/StockMovement');
+const { asyncHandler } = require('../middleware/errorHandler');
+const { NotFoundError, ValidationError } = require('../utils/errors');
+const { withTransaction } = require('../utils/transaction');
+const logger = require('../utils/logger');
 
-exports.createSale = async (req, res) => {
+exports.createSale = asyncHandler(async (req, res) => {
   const { itemId, quantity, sellPrice: customSellPrice } = req.body;
-  console.log(`📦 [SaleController] createSale called - itemId: ${itemId}, quantity: ${quantity}, customPrice: ${customSellPrice || 'default'}, companyId: ${req.user.companyId}`);
   
-  try {
-    const item = await StockItem.findOne({ _id: itemId, companyId: req.user.companyId });
+  logger.info('Creating new sale', { itemId, quantity, userId: req.user.id });
+  
+  const result = await withTransaction(async (session) => {
+    const item = await StockItem.findOne({ 
+      _id: itemId, 
+      companyId: req.user.companyId 
+    }).session(session);
     
     if (!item) {
-      console.log(`❌ [SaleController] Item not found - itemId: ${itemId}`);
-      return res.status(404).json({ message: 'Item not found' });
+      throw new NotFoundError('Item not found');
     }
-    
-    console.log(`📋 [SaleController] Found item: ${item.name}, currentStock: ${item.quantity}, requestedQty: ${quantity}`);
     
     if (item.quantity < quantity) {
-      console.log(`⚠️ [SaleController] Insufficient stock - available: ${item.quantity}, requested: ${quantity}`);
-      return res.status(400).json({ message: 'Insufficient stock' });
+      throw new ValidationError('Insufficient stock');
     }
 
-    // Use custom sell price if provided, otherwise use item's default sell price
-    const actualSellPrice = customSellPrice != null && customSellPrice > 0 
-      ? customSellPrice 
-      : item.sellPrice;
-    
+    const actualSellPrice = customSellPrice != null && customSellPrice > 0 ? customSellPrice : item.sellPrice;
     const subtotal = actualSellPrice * quantity;
     const profit = (actualSellPrice - item.buyPrice) * quantity;
 
-    console.log(`💰 [SaleController] Creating sale - price: ${actualSellPrice} (${customSellPrice ? 'custom' : 'default'}), subtotal: ${subtotal}, profit: ${profit}`);
-
-    const sale = await Sale.create({
+    const sale = await Sale.create([{
       companyId: req.user.companyId,
       item: item._id,
       itemName: item.name,
@@ -38,30 +37,38 @@ exports.createSale = async (req, res) => {
       sellPrice: actualSellPrice,
       subtotal,
       profit,
-    });
+    }], { session });
 
-    // Reduce stock
-    const oldQty = item.quantity;
+    const quantityBefore = item.quantity;
     item.quantity -= quantity;
-    await item.save();
+    await item.save({ session });
 
-    console.log(`✅ [SaleController] Sale created - saleId: ${sale._id}, price: ${actualSellPrice}, stock: ${oldQty} → ${item.quantity}`);
+    // Record stock movement
+    await StockMovement.create([{
+      companyId: req.user.companyId,
+      stockItemId: item._id,
+      type: 'sale',
+      quantity,
+      quantityBefore,
+      quantityAfter: item.quantity,
+      unitPrice: actualSellPrice,
+      totalValue: subtotal,
+      referenceId: sale[0]._id,
+      referenceType: 'Sale',
+      performedBy: req.user.id
+    }], { session });
 
-    res.status(201).json(sale);
-  } catch (error) {
-    console.error(`❌ [SaleController] Error creating sale:`, error.message, error.stack);
-    res.status(500).json({ message: error.message });
-  }
-};
+    logger.info('Sale created successfully', { saleId: sale[0]._id });
+    return sale[0];
+  });
 
-exports.getSales = async (req, res) => {
-  console.log(`📊 [SaleController] getSales called - companyId: ${req.user.companyId}`);
-  try {
-    const sales = await Sale.find({ companyId: req.user.companyId }).sort({ date: -1 });
-    console.log(`✅ [SaleController] Found ${sales.length} sales`);
-    res.json(sales);
-  } catch (error) {
-    console.error(`❌ [SaleController] Error getting sales:`, error.message);
-    res.status(500).json({ message: error.message });
-  }
-};
+  res.status(201).json(result);
+});
+
+exports.getSales = asyncHandler(async (req, res) => {
+  logger.info('Fetching sales history', { userId: req.user.id });
+  
+  const sales = await Sale.find({ companyId: req.user.companyId }).sort({ date: -1 });
+  
+  res.json(sales);
+});

@@ -20,7 +20,7 @@ final class SalesNotifierProvider
         argument: null,
         retry: null,
         name: r'salesProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -33,7 +33,7 @@ final class SalesNotifierProvider
   SalesNotifier create() => SalesNotifier();
 }
 
-String _$salesNotifierHash() => r'1685fbdacc765bc18bcb1bd9d6194292e9b27940';
+String _$salesNotifierHash() => r'ae60eea434f5761ce069d0c23fd86a1aa7695674';
 
 abstract class _$SalesNotifier extends $AsyncNotifier<List<Sale>> {
   FutureOr<List<Sale>> build();

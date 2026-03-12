@@ -15,7 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login => 'Login';
 
   @override
-  String get username => 'Username';
+  String get username => 'Username, Email or Phone';
 
   @override
   String get password => 'Password';
@@ -282,7 +282,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get admin => 'Admin';
 
   @override
-  String get staff => 'Staff';
+  String get staff => 'Customer';
+
+  @override
+  String get company => 'Company';
 
   @override
   String get companies => 'Companies';
@@ -432,6 +435,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionCancel => 'Cancel';
 
   @override
+  String get actionEdit => 'Edit';
+
+  @override
   String get msgDeleteCompany => 'Are you sure you want to delete';
 
   @override
@@ -439,4 +445,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get usernameError => 'Username must be a single word (no spaces)';
+
+  @override
+  String get recentTransactions => 'Recent Transactions';
+
+  @override
+  String get businessPerformance => 'Business Performance';
+
+  @override
+  String get lowStockAlert => 'Low Stock Alert';
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String get noRecentActivity => 'No recent activity';
+
+  @override
+  String get addStock => 'Add Stock';
+
+  @override
+  String get itemsLowStock => 'items are running low on quantity';
+
+  @override
+  String get categories => 'Categories';
 }

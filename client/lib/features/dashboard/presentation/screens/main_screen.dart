@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Stock/l10n/app_localizations.dart';
+import 'package:stock/l10n/app_localizations.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class MainScreen extends StatelessWidget {
@@ -43,11 +43,51 @@ class MainScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(child: _buildNavItem(context, Icons.dashboard_rounded, l10n.dashboard, '/', selectedIndex == 0)),
-                Expanded(child: _buildNavItem(context, Icons.inventory_2_rounded, l10n.stock, '/stock', selectedIndex == 1)),
-                Expanded(child: _buildNavItem(context, Icons.point_of_sale_rounded, l10n.sales, '/billing', selectedIndex == 2)),
-                Expanded(child: _buildNavItem(context, Icons.receipt_long_rounded, l10n.expenses, '/expenses', selectedIndex == 3)),
-                Expanded(child: _buildNavItem(context, Icons.analytics_rounded, l10n.reports, '/reports', selectedIndex == 4)),
+                Expanded(
+                  child: _buildNavItem(
+                    context,
+                    Icons.dashboard_rounded,
+                    l10n.dashboard,
+                    '/',
+                    selectedIndex == 0,
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(
+                    context,
+                    Icons.inventory_2_rounded,
+                    l10n.stock,
+                    '/stock',
+                    selectedIndex == 1,
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(
+                    context,
+                    Icons.point_of_sale_rounded,
+                    l10n.sales,
+                    '/billing',
+                    selectedIndex == 2,
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(
+                    context,
+                    Icons.receipt_long_rounded,
+                    l10n.expenses,
+                    '/expenses',
+                    selectedIndex == 3,
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(
+                    context,
+                    Icons.analytics_rounded,
+                    l10n.reports,
+                    '/reports',
+                    selectedIndex == 4,
+                  ),
+                ),
               ],
             ),
           ),

@@ -34,7 +34,7 @@ final class DashboardSummaryNotifierProvider
 }
 
 String _$dashboardSummaryNotifierHash() =>
-    r'92c31a36b7242442e8394ebbffe26974f6e0e7d3';
+    r'94830075dc082f67091273e359fad305ac0ff09c';
 
 abstract class _$DashboardSummaryNotifier
     extends $AsyncNotifier<DashboardSummary> {

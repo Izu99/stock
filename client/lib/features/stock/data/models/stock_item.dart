@@ -13,6 +13,8 @@ abstract class StockItem with _$StockItem {
     required double buyPrice,
     required double sellPrice,
     required double quantity,
+    @Default(5.0) double lowStockThreshold,
+    String? barcode,
     required ItemUnit unit,
     required String category,
     String? subcategory,
@@ -20,5 +22,6 @@ abstract class StockItem with _$StockItem {
     String? note,
   }) = _StockItem;
 
-  factory StockItem.fromJson(Map<String, dynamic> json) => _$StockItemFromJson(json);
+  factory StockItem.fromJson(Map<String, dynamic> json) =>
+      _$StockItemFromJson(json);
 }

@@ -18,19 +18,19 @@ class IncomeRepositoryImpl implements IncomeRepository {
 
   @override
   Future<List<Income>> getIncomes() async {
-    final response = await _apiClient.dio.get('/income');
+    final response = await _apiClient.dio.get('income');
     return (response.data as List).map((e) => Income.fromJson(e)).toList();
   }
 
   @override
   Future<Income> addIncome(Income income) async {
-    final response = await _apiClient.dio.post('/income', data: income.toJson());
+    final response = await _apiClient.dio.post('income', data: income.toJson());
     return Income.fromJson(response.data);
   }
 
   @override
   Future<void> deleteIncome(String id) async {
-    await _apiClient.dio.delete('/income/$id');
+    await _apiClient.dio.delete('income/$id');
   }
 }
 
