@@ -180,10 +180,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             : () => ref
                                   .read(authProvider.notifier)
                                   .loginWithGoogle(),
-                        icon: const FaIcon(
-                          FontAwesomeIcons.google,
-                          color: Colors.red,
-                          size: 20,
+                        icon: Image.asset(
+                          'assets/icons/google_logo.png',
+                          width: 20,
+                          height: 20,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.account_circle_outlined,
+                            color: Colors.red,
+                            size: 20,
+                          ),
                         ),
                         label: Text(
                           'Sign in with Google',
