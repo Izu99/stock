@@ -16,19 +16,21 @@ exports.getItemProfitability = asyncHandler(async (req, res) => {
   const sales = await Sale.find({
     companyId: req.user.companyId,
     ...(Object.keys(dateFilter).length > 0 && { date: dateFilter })
-  }).populate('items.stockItemId');
+  }).populate('items.item');
+
 
   // Calculate profit per item
   const itemProfits = {};
 
   sales.forEach(sale => {
     sale.items.forEach(item => {
-      const stockItem = item.stockItemId;
+      const stockItem = item.item;
       if (!stockItem) return;
 
       const itemId = stockItem._id.toString();
-      const profit = (item.sellingPrice - stockItem.buyPrice) * item.quantity;
-      const revenue = item.sellingPrice * item.quantity;
+      const profit = item.profit;
+      const revenue = item.subtotal;
+
 
       if (!itemProfits[itemId]) {
         itemProfits[itemId] = {
@@ -71,18 +73,20 @@ exports.getCategoryProfitability = asyncHandler(async (req, res) => {
   const sales = await Sale.find({
     companyId: req.user.companyId,
     ...(Object.keys(dateFilter).length > 0 && { date: dateFilter })
-  }).populate('items.stockItemId');
+  }).populate('items.item');
+
 
   const categoryProfits = {};
 
   sales.forEach(sale => {
     sale.items.forEach(item => {
-      const stockItem = item.stockItemId;
+      const stockItem = item.item;
       if (!stockItem) return;
 
-      const category = stockItem.category;
-      const profit = (item.sellingPrice - stockItem.buyPrice) * item.quantity;
-      const revenue = item.sellingPrice * item.quantity;
+      const category = item.category || stockItem.category; // Preference to item.category if stored
+      const profit = item.profit;
+      const revenue = item.subtotal;
+
 
       if (!categoryProfits[category]) {
         categoryProfits[category] = {
@@ -239,13 +243,14 @@ exports.getTopSellingItems = asyncHandler(async (req, res) => {
   const sales = await Sale.find({
     companyId: req.user.companyId,
     ...(Object.keys(dateFilter).length > 0 && { date: dateFilter })
-  }).populate('items.stockItemId');
+  }).populate('items.item');
 
   const itemSales = {};
 
+
   sales.forEach(sale => {
     sale.items.forEach(item => {
-      const stockItem = item.stockItemId;
+      const stockItem = item.item;
       if (!stockItem) return;
 
       const itemId = stockItem._id.toString();
@@ -262,12 +267,13 @@ exports.getTopSellingItems = asyncHandler(async (req, res) => {
       }
 
       itemSales[itemId].totalQuantity += item.quantity;
-      itemSales[itemId].totalRevenue += item.sellingPrice * item.quantity;
+      itemSales[itemId].totalRevenue += item.subtotal;
       itemSales[itemId].salesCount += 1;
     });
   });
 
   const topItems = Object.values(itemSales)
+
     .sort((a, b) => b.totalQuantity - a.totalQuantity)
     .slice(0, parseInt(limit));
 

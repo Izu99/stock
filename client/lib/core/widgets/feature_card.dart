@@ -23,48 +23,55 @@ class FeatureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.02)),
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Icon container with gradient background
-            Stack(
-              children: [
-                Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    gradient: gradient,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: gradient.colors.first.withOpacity(0.2),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Icon(icon, color: iconColor ?? Colors.white, size: 26),
+            Flexible(
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  gradient: gradient,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradient.colors.first.withOpacity(0.15),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                if (badge != null)
-                  Positioned(top: -6, right: -6, child: badge!),
-              ],
+                child: Icon(icon, color: iconColor ?? Colors.white, size: 22),
+              ),
             ),
-            const SizedBox(height: 4),
-            // Label
-            Expanded(
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: ModernTheme.textPrimary,
-                  fontSize: 10,
+            const SizedBox(height: 8),
+            // Label - Fixed height to ensure uniform cards
+            SizedBox(
+              height: 32,
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: ModernTheme.textPrimary,
+                      fontSize: 10.5,
+                      height: 1.1,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -103,35 +110,46 @@ class FeatureCardGrid extends StatelessWidget {
             ),
           ),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          padding: const EdgeInsets.all(8),
+          margin: EdgeInsets.zero, // Use full width of parent padding
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
               final width = constraints.maxWidth;
-              // Dynamically calculate aspect ratio to prevent overflow
-              // Increase ratio if space is tight
               final crossAxisCount = width > 600 ? 6 : 4;
-              final childAspectRatio = width > 400 ? 0.85 : 0.75;
+
+              // Calculate item width
+              final itemWidth =
+                  (width - ((crossAxisCount - 1) * 8)) / crossAxisCount;
+
+              // Target height is around 100 to fit icon(44) + text(32) + padding/spacing
+              // Ratio = Width / Height.
+              // We want Height to be at least 96.
+              double childAspectRatio = itemWidth / 96;
+
+              // Clamp ratio to sensible values
+              if (childAspectRatio > 1.2) childAspectRatio = 1.2;
+              if (childAspectRatio < 0.65) childAspectRatio = 0.65;
 
               return GridView.builder(
                 shrinkWrap: true,
+                padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: crossAxisCount,
                   childAspectRatio: childAspectRatio,
-                  crossAxisSpacing: 4,
-                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
                 ),
                 itemCount: features.length,
                 itemBuilder: (context, index) {

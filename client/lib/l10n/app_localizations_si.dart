@@ -21,16 +21,16 @@ class AppLocalizationsSi extends AppLocalizations {
   String get password => 'මුරපදය';
 
   @override
-  String get dashboard => 'ප්‍රධාන පුවරුව';
+  String get dashboard => 'ප්‍රධාන';
 
   @override
   String get stock => 'තොග';
 
   @override
-  String get sales => 'විකුණුම්';
+  String get sales => 'විකිණීම';
 
   @override
-  String get expenses => 'වියදම්';
+  String get expenses => 'වියදම';
 
   @override
   String get income => 'වෙනත් ආදායම්';
@@ -102,7 +102,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get lowStock => 'තොග අඩුයි';
 
   @override
-  String get billing => 'බිල්පත් කිරීම';
+  String get billing => 'බිල්';
 
   @override
   String get total => 'එකතුව';
@@ -192,7 +192,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get monthlyReport => 'මාසික වාර්තාව';
 
   @override
-  String get filterByDate => 'දිනය අනුව පෙරන්න';
+  String get filterByDate => 'දිනය';
 
   @override
   String get totalSales => 'මුළු විකුණුම්';
@@ -452,7 +452,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get recentTransactions => 'මෑත ගනුදෙනු';
 
   @override
-  String get businessPerformance => 'ව්‍යාපාර කාර්ය සාධනය';
+  String get businessPerformance => 'ව්‍යාපාර ප්‍රගතිය';
 
   @override
   String get lowStockAlert => 'අඩු තොග අනතුරු ඇඟවීම';
@@ -464,11 +464,44 @@ class AppLocalizationsSi extends AppLocalizations {
   String get noRecentActivity => 'මෑත කාලීන ක්‍රියාකාරකම් නොමැත';
 
   @override
-  String get addStock => 'තොග එකතු කරන්න';
+  String get addStock => 'තොග';
 
   @override
   String get itemsLowStock => 'භාණ්ඩ ප්‍රමාණය අඩු වෙමින් පවතී';
 
   @override
-  String get categories => 'ප්‍රවර්ග';
+  String get categories => 'වර්ග';
+
+  @override
+  String get salesTrends => 'විකුණුම් ප්‍රවණතා';
+
+  @override
+  String get profitTrends => 'ලාභ ප්‍රවණතා';
+
+  @override
+  String get businessProfitability => 'දළ විශ්ලේෂණය';
+
+  @override
+  String get topPerformingItems => 'වැඩිපුරම විකිණෙන භාණ්ඩ';
+
+  @override
+  String get detailedActivity => 'ගනුදෙනු විස්තර';
+
+  @override
+  String get customRange => 'අභිරුචි පරාසය';
+
+  @override
+  String get sold => 'විකුණා ඇත';
+
+  @override
+  String get filteredStatistics => 'සංඛ්‍යාලේඛන';
+
+  @override
+  String get viewMore => 'තව බලන්න';
+
+  @override
+  String get showLess => 'අඩුවෙන් බලන්න';
+
+  @override
+  String get units => 'ඒකක';
 }

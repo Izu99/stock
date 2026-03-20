@@ -1,4 +1,4 @@
-package com.example.hardware_stock_sales
+package com.stock.erp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -26,14 +26,20 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final summaryAsync = ref.watch(dashboardSummaryProvider);
+    final summaryAsync = ref.watch(
+      dashboardSummaryProvider(startDate: null, endDate: null),
+    );
     final userAsync = ref.watch(authProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: RefreshIndicator(
         color: AppColors.primary,
-        onRefresh: () => ref.read(dashboardSummaryProvider.notifier).refresh(),
+        onRefresh: () => ref
+            .read(
+              dashboardSummaryProvider(startDate: null, endDate: null).notifier,
+            )
+            .refresh(),
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
@@ -70,47 +76,15 @@ class DashboardScreen extends ConsumerWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _getGreeting(l10n),
-                                      style: GoogleFonts.inter(
-                                        fontSize: 14,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.7,
-                                        ),
-                                      ),
-                                    ),
-                                    userAsync.when(
-                                      data: (user) => Text(
-                                        user?.companyName ?? l10n.dashboard,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      loading: () => Text(
-                                        l10n.dashboard,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      error: (_, __) => Text(
-                                        l10n.dashboard,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  _getGreeting(l10n),
+                                  style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    color: Colors.white.withValues(alpha: 0.7),
+                                  ),
                                 ),
                                 Row(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     _buildHeaderAction(
                                       Icons.notifications_none_rounded,
@@ -124,6 +98,22 @@ class DashboardScreen extends ConsumerWidget {
                                   ],
                                 ),
                               ],
+                            ),
+                            const SizedBox(height: 8),
+                            userAsync.when(
+                              data: (user) => Text(
+                                user?.companyName ?? l10n.dashboard,
+                                style: GoogleFonts.inter(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                  letterSpacing: -0.5,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.visible,
+                              ),
+                              loading: () => const SizedBox(height: 24),
+                              error: (_, __) => const SizedBox(height: 24),
                             ),
                             const Spacer(),
                             // Performance Highlight
@@ -155,12 +145,12 @@ class DashboardScreen extends ConsumerWidget {
                         // Key Metrics Grid
                         SectionHeader(title: l10n.overview),
                         GridView.count(
-                          crossAxisCount: 2,
+                          crossAxisCount: 1,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: 16,
+                          mainAxisSpacing: 12,
                           crossAxisSpacing: 16,
-                          childAspectRatio: 1.1,
+                          childAspectRatio: 3.2,
                           children: [
                             _buildStatCard(
                               l10n.totalStockValue,
@@ -217,39 +207,36 @@ class DashboardScreen extends ConsumerWidget {
 
                         // Quick Actions (Helakuru Style)
                         SectionHeader(title: l10n.quickActions),
-                        SizedBox(
-                          height: 100,
-                          child: FeatureCardGrid(
-                            title: '',
-                            features: [
-                              FeatureCardData(
-                                icon: Icons.add_shopping_cart_rounded,
-                                label: l10n.newSale,
-                                gradient: ModernTheme.blueGradient,
-                                onTap: () => context.go('/billing'),
-                              ),
-                              FeatureCardData(
-                                icon: Icons.add_box_outlined,
-                                label: l10n.addStock,
-                                gradient: ModernTheme.greenGradient,
-                                onTap: () => context.go('/stock'),
-                              ),
-                              FeatureCardData(
-                                icon: Icons.qr_code_scanner,
-                                label: 'Scan',
-                                gradient: ModernTheme.purpleGradient,
-                                onTap: () {
-                                  // Open scanner
-                                },
-                              ),
-                              FeatureCardData(
-                                icon: Icons.bar_chart_rounded,
-                                label: l10n.reports,
-                                gradient: ModernTheme.orangeGradient,
-                                onTap: () => context.go('/reports'),
-                              ),
-                            ],
-                          ),
+                        FeatureCardGrid(
+                          title: '',
+                          features: [
+                            FeatureCardData(
+                              icon: Icons.add_shopping_cart_rounded,
+                              label: l10n.newSale,
+                              gradient: ModernTheme.blueGradient,
+                              onTap: () => context.go('/billing'),
+                            ),
+                            FeatureCardData(
+                              icon: Icons.add_box_outlined,
+                              label: l10n.addStock,
+                              gradient: ModernTheme.greenGradient,
+                              onTap: () => context.go('/stock'),
+                            ),
+                            FeatureCardData(
+                              icon: Icons.qr_code_scanner,
+                              label: 'Scan',
+                              gradient: ModernTheme.purpleGradient,
+                              onTap: () {
+                                // Open scanner
+                              },
+                            ),
+                            FeatureCardData(
+                              icon: Icons.bar_chart_rounded,
+                              label: l10n.reports,
+                              gradient: ModernTheme.orangeGradient,
+                              onTap: () => context.go('/reports'),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 32),
 
@@ -350,40 +337,48 @@ class DashboardScreen extends ConsumerWidget {
             ? Border.all(color: AppColors.error.withOpacity(0.3), width: 1.5)
             : null,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(icon, color: color, size: 22),
+            child: Icon(icon, color: color, size: 24),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 2,
                 ),
-              ),
-              Text(
-                title,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: GoogleFonts.inter(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+              ],
+            ),
+          ),
+          Icon(
+            Icons.chevron_right_rounded,
+            color: AppColors.textHint.withValues(alpha: 0.3),
+            size: 20,
           ),
         ],
       ),
@@ -394,6 +389,14 @@ class DashboardScreen extends ConsumerWidget {
     DashboardSummary summary,
     AppLocalizations l10n,
   ) {
+    final double maxVal = [
+      summary.monthlySales,
+      summary.totalExpenses,
+      summary.profit.abs(),
+    ].reduce((a, b) => a > b ? a : b);
+
+    final double chartMaxY = maxVal == 0 ? 100 : maxVal * 1.3;
+
     return Container(
       height: 260,
       padding: const EdgeInsets.fromLTRB(10, 24, 20, 10),
@@ -411,11 +414,7 @@ class DashboardScreen extends ConsumerWidget {
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
-          maxY:
-              (summary.monthlySales > summary.totalExpenses
-                  ? summary.monthlySales
-                  : summary.totalExpenses) *
-              1.2,
+          maxY: chartMaxY,
           barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -436,6 +435,7 @@ class DashboardScreen extends ConsumerWidget {
                 showTitles: true,
                 getTitlesWidget: (value, meta) {
                   final titles = [l10n.sales, l10n.expenses, l10n.profit];
+                  if (value.toInt() >= titles.length) return const SizedBox();
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
@@ -463,12 +463,23 @@ class DashboardScreen extends ConsumerWidget {
           gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
           barGroups: [
-            _buildBarGroup(0, summary.monthlySales, AppColors.primary),
-            _buildBarGroup(1, summary.totalExpenses, AppColors.error),
+            _buildBarGroup(
+              0,
+              summary.monthlySales,
+              AppColors.primary,
+              chartMaxY,
+            ),
+            _buildBarGroup(
+              1,
+              summary.totalExpenses,
+              AppColors.error,
+              chartMaxY,
+            ),
             _buildBarGroup(
               2,
               summary.profit.abs(),
               summary.profit >= 0 ? AppColors.success : AppColors.warning,
+              chartMaxY,
             ),
           ],
         ),
@@ -476,7 +487,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  BarChartGroupData _buildBarGroup(int x, double y, Color color) {
+  BarChartGroupData _buildBarGroup(int x, double y, Color color, double maxY) {
     return BarChartGroupData(
       x: x,
       barRods: [
@@ -487,7 +498,7 @@ class DashboardScreen extends ConsumerWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
-            toY: y * 0.1,
+            toY: maxY,
             color: color.withOpacity(0.05),
           ),
         ),
@@ -512,47 +523,62 @@ class DashboardScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.error.withOpacity(0.2)),
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-              color: AppColors.error,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.priority_high_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.lowStockAlert,
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.error,
-                  ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  color: AppColors.error,
+                  shape: BoxShape.circle,
                 ),
-                Text(
-                  '$count ${l10n.itemsLowStock}',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    color: AppColors.error.withOpacity(0.8),
-                  ),
+                child: const Icon(
+                  Icons.priority_high_rounded,
+                  color: Colors.white,
+                  size: 20,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.lowStockAlert,
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.error,
+                      ),
+                    ),
+                    Text(
+                      '$count ${l10n.itemsLowStock}',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: AppColors.error.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: onTap,
-            child: Text(
-              l10n.viewAll,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton(
+              onPressed: onTap,
+              style: TextButton.styleFrom(
+                backgroundColor: AppColors.error.withOpacity(0.1),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                l10n.viewAll,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
             ),
           ),
         ],
@@ -679,7 +705,7 @@ class DashboardScreen extends ConsumerWidget {
                     ),
                   ),
                   subtitle: Text(
-                    DateFormat('MMM dd, hh:mm a').format(tx.date),
+                    DateFormat('MMM dd, hh:mm a').format(tx.date.toUtc().add(const Duration(hours: 5, minutes: 30))),
                     style: const TextStyle(fontSize: 12),
                   ),
                   trailing: Text(
@@ -720,8 +746,14 @@ class DashboardScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           Text('Failed to load dashboard: $err'),
           TextButton(
-            onPressed: () =>
-                ref.read(dashboardSummaryProvider.notifier).refresh(),
+            onPressed: () => ref
+                .read(
+                  dashboardSummaryProvider(
+                    startDate: null,
+                    endDate: null,
+                  ).notifier,
+                )
+                .refresh(),
             child: const Text('Retry'),
           ),
         ],

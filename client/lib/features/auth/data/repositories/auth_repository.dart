@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +25,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> _ensureInitialized() async {
     if (!_isInitialized) {
       await _googleSignIn.initialize(
-        serverClientId: '816656670559-vm76k9a0e51c993gd8ec9l334qra8k9f.apps.googleusercontent.com',
+        serverClientId:
+            '816656670559-vm76k9a0e51c993gd8ec9l334qra8k9f.apps.googleusercontent.com',
       );
       _isInitialized = true;
     }
@@ -113,8 +115,30 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<User?> getCurrentUser() async {
-    // Implement if there's a /auth/me endpoint
-    return null;
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (token == null) {
+      return null;
+    }
+    try {
+      final response = await _apiClient.dio.get(
+        'auth/me',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      if (response.statusCode == 200) {
+        final user = User.fromJson(response.data);
+        // Store the token again in case it was refreshed
+        if (user.token != null) {
+          await prefs.setString('auth_token', user.token!);
+        }
+        return user;
+      }
+      return null;
+    } catch (e) {
+      // If token is expired or invalid, log out
+      await logout();
+      return null;
+    }
   }
 }
 

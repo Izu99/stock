@@ -1,4 +1,4 @@
-enum ItemUnit { 
+enum ItemUnit {
   kg,
   L,
   pcs;

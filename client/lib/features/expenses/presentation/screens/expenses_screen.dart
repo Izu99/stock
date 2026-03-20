@@ -226,7 +226,7 @@ class ExpensesScreen extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            DateFormat('MMM dd, yyyy').format(expense.date),
+                            DateFormat('MMM dd, yyyy').format(expense.date.toUtc().add(const Duration(hours: 5, minutes: 30))),
                             style: GoogleFonts.inter(
                               fontSize: 12,
                               color: AppColors.textHint,
@@ -371,20 +371,30 @@ class ExpensesScreen extends ConsumerWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          isEdit ? l10n.editExpense : l10n.addExpense,
-                          style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
+                        Expanded(
+                          child: Text(
+                            isEdit ? l10n.editExpense : l10n.addExpense,
+                            style: GoogleFonts.inter(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.textPrimary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () => Navigator.pop(context),
+                        Material(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(12),
+                          child: IconButton(
+                            icon: const Icon(Icons.close, size: 20),
+                            onPressed: () => Navigator.pop(context),
+                            constraints: const BoxConstraints(),
+                            padding: const EdgeInsets.all(8),
+                          ),
                         ),
                       ],
                     ),

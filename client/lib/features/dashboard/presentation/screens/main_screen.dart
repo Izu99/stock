@@ -128,12 +128,13 @@ class MainScreen extends StatelessWidget {
             Text(
               label,
               textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              overflow: TextOverflow.visible,
               style: GoogleFonts.inter(
                 fontSize: 9,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isSelected ? AppColors.primary : AppColors.textHint,
+                height: 1.2,
               ),
             ),
           ],

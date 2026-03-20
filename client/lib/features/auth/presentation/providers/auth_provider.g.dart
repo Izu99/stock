@@ -19,7 +19,7 @@ final class AuthProvider extends $AsyncNotifierProvider<Auth, User?> {
         argument: null,
         retry: null,
         name: r'authProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -32,7 +32,7 @@ final class AuthProvider extends $AsyncNotifierProvider<Auth, User?> {
   Auth create() => Auth();
 }
 
-String _$authHash() => r'ebf1096c72e32d319afc39c1bca580ff3703ed92';
+String _$authHash() => r'1dc8bcac2c862230763b3af0a0edcc27a0871ec5';
 
 abstract class _$Auth extends $AsyncNotifier<User?> {
   FutureOr<User?> build();
@@ -51,3 +51,37 @@ abstract class _$Auth extends $AsyncNotifier<User?> {
     element.handleCreate(ref, build);
   }
 }
+
+@ProviderFor(companyDetails)
+final companyDetailsProvider = CompanyDetailsProvider._();
+
+final class CompanyDetailsProvider
+    extends
+        $FunctionalProvider<AsyncValue<Company?>, Company?, FutureOr<Company?>>
+    with $FutureModifier<Company?>, $FutureProvider<Company?> {
+  CompanyDetailsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'companyDetailsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$companyDetailsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<Company?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Company?> create(Ref ref) {
+    return companyDetails(ref);
+  }
+}
+
+String _$companyDetailsHash() => r'500e47f53eee77594cbdc80a343cab250e583a22';

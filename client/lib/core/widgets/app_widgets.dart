@@ -67,12 +67,11 @@ class SummaryCard extends StatelessWidget {
             Text(
               title,
               style: GoogleFonts.inter(
-                fontSize: 11,
+                fontSize: 10.5,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textSecondary,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
             const SizedBox(height: 2),
             FittedBox(
@@ -338,15 +337,15 @@ class SectionHeader extends StatelessWidget {
             child: Text(
               title,
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
+                height: 1.2,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
           ),
-          ?trailing,
+          if (trailing != null) trailing!,
         ],
       ),
     );

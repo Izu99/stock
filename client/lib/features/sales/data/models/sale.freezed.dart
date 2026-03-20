@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Sale {
 
-@JsonKey(name: '_id') String get id; String? get companyId;@JsonKey(name: 'item') String get itemId; String get itemName; double get quantity; double get sellPrice; double get subtotal; double get profit; DateTime get date;
+@JsonKey(name: '_id') String get id; String? get companyId; List<SaleItem> get items; double get totalAmount; double get totalProfit; String get billId; DateTime get date;
 /// Create a copy of Sale
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SaleCopyWith<Sale> get copyWith => _$SaleCopyWithImpl<Sale>(this as Sale, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.sellPrice, sellPrice) || other.sellPrice == sellPrice)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.profit, profit) || other.profit == profit)&&(identical(other.date, date) || other.date == date));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.totalProfit, totalProfit) || other.totalProfit == totalProfit)&&(identical(other.billId, billId) || other.billId == billId)&&(identical(other.date, date) || other.date == date));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,companyId,itemId,itemName,quantity,sellPrice,subtotal,profit,date);
+int get hashCode => Object.hash(runtimeType,id,companyId,const DeepCollectionEquality().hash(items),totalAmount,totalProfit,billId,date);
 
 @override
 String toString() {
-  return 'Sale(id: $id, companyId: $companyId, itemId: $itemId, itemName: $itemName, quantity: $quantity, sellPrice: $sellPrice, subtotal: $subtotal, profit: $profit, date: $date)';
+  return 'Sale(id: $id, companyId: $companyId, items: $items, totalAmount: $totalAmount, totalProfit: $totalProfit, billId: $billId, date: $date)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SaleCopyWith<$Res>  {
   factory $SaleCopyWith(Sale value, $Res Function(Sale) _then) = _$SaleCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String? companyId,@JsonKey(name: 'item') String itemId, String itemName, double quantity, double sellPrice, double subtotal, double profit, DateTime date
+@JsonKey(name: '_id') String id, String? companyId, List<SaleItem> items, double totalAmount, double totalProfit, String billId, DateTime date
 });
 
 
@@ -65,17 +65,15 @@ class _$SaleCopyWithImpl<$Res>
 
 /// Create a copy of Sale
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? companyId = freezed,Object? itemId = null,Object? itemName = null,Object? quantity = null,Object? sellPrice = null,Object? subtotal = null,Object? profit = null,Object? date = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? companyId = freezed,Object? items = null,Object? totalAmount = null,Object? totalProfit = null,Object? billId = null,Object? date = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
-as String?,itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
-as String,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
-as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as double,sellPrice: null == sellPrice ? _self.sellPrice : sellPrice // ignore: cast_nullable_to_non_nullable
-as double,subtotal: null == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
-as double,profit: null == profit ? _self.profit : profit // ignore: cast_nullable_to_non_nullable
-as double,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<SaleItem>,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as double,totalProfit: null == totalProfit ? _self.totalProfit : totalProfit // ignore: cast_nullable_to_non_nullable
+as double,billId: null == billId ? _self.billId : billId // ignore: cast_nullable_to_non_nullable
+as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -161,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId, @JsonKey(name: 'item')  String itemId,  String itemName,  double quantity,  double sellPrice,  double subtotal,  double profit,  DateTime date)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId,  List<SaleItem> items,  double totalAmount,  double totalProfit,  String billId,  DateTime date)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Sale() when $default != null:
-return $default(_that.id,_that.companyId,_that.itemId,_that.itemName,_that.quantity,_that.sellPrice,_that.subtotal,_that.profit,_that.date);case _:
+return $default(_that.id,_that.companyId,_that.items,_that.totalAmount,_that.totalProfit,_that.billId,_that.date);case _:
   return orElse();
 
 }
@@ -182,10 +180,10 @@ return $default(_that.id,_that.companyId,_that.itemId,_that.itemName,_that.quant
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId, @JsonKey(name: 'item')  String itemId,  String itemName,  double quantity,  double sellPrice,  double subtotal,  double profit,  DateTime date)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String? companyId,  List<SaleItem> items,  double totalAmount,  double totalProfit,  String billId,  DateTime date)  $default,) {final _that = this;
 switch (_that) {
 case _Sale():
-return $default(_that.id,_that.companyId,_that.itemId,_that.itemName,_that.quantity,_that.sellPrice,_that.subtotal,_that.profit,_that.date);case _:
+return $default(_that.id,_that.companyId,_that.items,_that.totalAmount,_that.totalProfit,_that.billId,_that.date);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +200,10 @@ return $default(_that.id,_that.companyId,_that.itemId,_that.itemName,_that.quant
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String? companyId, @JsonKey(name: 'item')  String itemId,  String itemName,  double quantity,  double sellPrice,  double subtotal,  double profit,  DateTime date)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String? companyId,  List<SaleItem> items,  double totalAmount,  double totalProfit,  String billId,  DateTime date)?  $default,) {final _that = this;
 switch (_that) {
 case _Sale() when $default != null:
-return $default(_that.id,_that.companyId,_that.itemId,_that.itemName,_that.quantity,_that.sellPrice,_that.subtotal,_that.profit,_that.date);case _:
+return $default(_that.id,_that.companyId,_that.items,_that.totalAmount,_that.totalProfit,_that.billId,_that.date);case _:
   return null;
 
 }
@@ -217,17 +215,21 @@ return $default(_that.id,_that.companyId,_that.itemId,_that.itemName,_that.quant
 @JsonSerializable()
 
 class _Sale implements Sale {
-  const _Sale({@JsonKey(name: '_id') required this.id, this.companyId, @JsonKey(name: 'item') required this.itemId, required this.itemName, required this.quantity, required this.sellPrice, required this.subtotal, required this.profit, required this.date});
+  const _Sale({@JsonKey(name: '_id') required this.id, this.companyId, required final  List<SaleItem> items, required this.totalAmount, required this.totalProfit, required this.billId, required this.date}): _items = items;
   factory _Sale.fromJson(Map<String, dynamic> json) => _$SaleFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
 @override final  String? companyId;
-@override@JsonKey(name: 'item') final  String itemId;
-@override final  String itemName;
-@override final  double quantity;
-@override final  double sellPrice;
-@override final  double subtotal;
-@override final  double profit;
+ final  List<SaleItem> _items;
+@override List<SaleItem> get items {
+  if (_items is EqualUnmodifiableListView) return _items;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_items);
+}
+
+@override final  double totalAmount;
+@override final  double totalProfit;
+@override final  String billId;
 @override final  DateTime date;
 
 /// Create a copy of Sale
@@ -243,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.itemId, itemId) || other.itemId == itemId)&&(identical(other.itemName, itemName) || other.itemName == itemName)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.sellPrice, sellPrice) || other.sellPrice == sellPrice)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.profit, profit) || other.profit == profit)&&(identical(other.date, date) || other.date == date));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Sale&&(identical(other.id, id) || other.id == id)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.totalProfit, totalProfit) || other.totalProfit == totalProfit)&&(identical(other.billId, billId) || other.billId == billId)&&(identical(other.date, date) || other.date == date));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,companyId,itemId,itemName,quantity,sellPrice,subtotal,profit,date);
+int get hashCode => Object.hash(runtimeType,id,companyId,const DeepCollectionEquality().hash(_items),totalAmount,totalProfit,billId,date);
 
 @override
 String toString() {
-  return 'Sale(id: $id, companyId: $companyId, itemId: $itemId, itemName: $itemName, quantity: $quantity, sellPrice: $sellPrice, subtotal: $subtotal, profit: $profit, date: $date)';
+  return 'Sale(id: $id, companyId: $companyId, items: $items, totalAmount: $totalAmount, totalProfit: $totalProfit, billId: $billId, date: $date)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$SaleCopyWith<$Res> implements $SaleCopyWith<$Res> {
   factory _$SaleCopyWith(_Sale value, $Res Function(_Sale) _then) = __$SaleCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String? companyId,@JsonKey(name: 'item') String itemId, String itemName, double quantity, double sellPrice, double subtotal, double profit, DateTime date
+@JsonKey(name: '_id') String id, String? companyId, List<SaleItem> items, double totalAmount, double totalProfit, String billId, DateTime date
 });
 
 
@@ -280,17 +282,15 @@ class __$SaleCopyWithImpl<$Res>
 
 /// Create a copy of Sale
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? companyId = freezed,Object? itemId = null,Object? itemName = null,Object? quantity = null,Object? sellPrice = null,Object? subtotal = null,Object? profit = null,Object? date = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? companyId = freezed,Object? items = null,Object? totalAmount = null,Object? totalProfit = null,Object? billId = null,Object? date = null,}) {
   return _then(_Sale(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
-as String?,itemId: null == itemId ? _self.itemId : itemId // ignore: cast_nullable_to_non_nullable
-as String,itemName: null == itemName ? _self.itemName : itemName // ignore: cast_nullable_to_non_nullable
-as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as double,sellPrice: null == sellPrice ? _self.sellPrice : sellPrice // ignore: cast_nullable_to_non_nullable
-as double,subtotal: null == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
-as double,profit: null == profit ? _self.profit : profit // ignore: cast_nullable_to_non_nullable
-as double,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<SaleItem>,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
+as double,totalProfit: null == totalProfit ? _self.totalProfit : totalProfit // ignore: cast_nullable_to_non_nullable
+as double,billId: null == billId ? _self.billId : billId // ignore: cast_nullable_to_non_nullable
+as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

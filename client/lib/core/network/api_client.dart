@@ -6,7 +6,7 @@ class ApiClient {
   final Dio _dio;
   final Logger _logger = Logger();
 
-  ApiClient({String baseUrl = 'http://82.25.180.20/stock/api/'})
+  ApiClient({String baseUrl = 'http://10.0.2.2:5000/api/'})
     : _dio = Dio(
         BaseOptions(
           baseUrl: baseUrl,

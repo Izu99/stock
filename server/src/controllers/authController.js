@@ -63,7 +63,7 @@ exports.loginUser = async (req, res) => {
         { email: identifier },
         { phone: identifier }
       ]
-    }).populate('companyId', 'name');
+    }).populate('companyId');
     
     if (!user) {
       console.log(`❌ [Auth] Process halted: User not found`);
@@ -80,7 +80,7 @@ exports.loginUser = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        companyName: user.companyId ? user.companyId.name : null,
+        company: user.companyId, // Return full company object
         token: generateToken(user._id),
       });
     } else {
@@ -107,7 +107,7 @@ exports.googleLogin = async (req, res) => {
     const { email, name } = payload;
     console.log(`🔍 [Auth] Verifying user with email: ${email}...`);
 
-    let user = await User.findOne({ email }).populate('companyId', 'name');
+    let user = await User.findOne({ email }).populate('companyId');
 
     if (!user) {
       console.log(`❌ [Auth] User with email ${email} not found in database.`);
@@ -122,12 +122,31 @@ exports.googleLogin = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
-      companyName: user.companyId ? user.companyId.name : null,
+      company: user.companyId, // Return full company object
       token: generateToken(user._id),
     });
 
   } catch (error) {
     console.error(`💥 [Auth] Google validation failed: ${error.message}`);
     res.status(401).json({ message: 'Invalid Google Source Token' });
+  }
+};
+
+exports.getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('companyId');
+    if (user) {
+      res.json({
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        company: user.companyId,
+      });
+    } else {
+      res.status(404).json({ success: false, error: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 };

@@ -10,35 +10,87 @@ part of 'dashboard_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(DashboardSummaryNotifier)
-final dashboardSummaryProvider = DashboardSummaryNotifierProvider._();
+final dashboardSummaryProvider = DashboardSummaryNotifierFamily._();
 
 final class DashboardSummaryNotifierProvider
     extends $AsyncNotifierProvider<DashboardSummaryNotifier, DashboardSummary> {
-  DashboardSummaryNotifierProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'dashboardSummaryProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  DashboardSummaryNotifierProvider._({
+    required DashboardSummaryNotifierFamily super.from,
+    required ({DateTime? startDate, DateTime? endDate}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'dashboardSummaryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$dashboardSummaryNotifierHash();
 
+  @override
+  String toString() {
+    return r'dashboardSummaryProvider'
+        ''
+        '$argument';
+  }
+
   @$internal
   @override
   DashboardSummaryNotifier create() => DashboardSummaryNotifier();
+
+  @override
+  bool operator ==(Object other) {
+    return other is DashboardSummaryNotifierProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$dashboardSummaryNotifierHash() =>
-    r'94830075dc082f67091273e359fad305ac0ff09c';
+    r'a3fd59be623b1b284933b98ccd78ec361c5146c1';
+
+final class DashboardSummaryNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          DashboardSummaryNotifier,
+          AsyncValue<DashboardSummary>,
+          DashboardSummary,
+          FutureOr<DashboardSummary>,
+          ({DateTime? startDate, DateTime? endDate})
+        > {
+  DashboardSummaryNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'dashboardSummaryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DashboardSummaryNotifierProvider call({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) => DashboardSummaryNotifierProvider._(
+    argument: (startDate: startDate, endDate: endDate),
+    from: this,
+  );
+
+  @override
+  String toString() => r'dashboardSummaryProvider';
+}
 
 abstract class _$DashboardSummaryNotifier
     extends $AsyncNotifier<DashboardSummary> {
-  FutureOr<DashboardSummary> build();
+  late final _$args = ref.$arg as ({DateTime? startDate, DateTime? endDate});
+  DateTime? get startDate => _$args.startDate;
+  DateTime? get endDate => _$args.endDate;
+
+  FutureOr<DashboardSummary> build({DateTime? startDate, DateTime? endDate});
   @$mustCallSuper
   @override
   void runBuild() {
@@ -52,6 +104,9 @@ abstract class _$DashboardSummaryNotifier
               Object?,
               Object?
             >;
-    element.handleCreate(ref, build);
+    element.handleCreate(
+      ref,
+      () => build(startDate: _$args.startDate, endDate: _$args.endDate),
+    );
   }
 }

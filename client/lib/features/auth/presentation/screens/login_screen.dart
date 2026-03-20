@@ -74,7 +74,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
         if (errorStr.contains('Contact admin')) {
           errorMessage = 'Contact admin to register this email, not registered';
-        } else if (errorStr.contains('401')) {
+        } else if (errorStr.contains('Invalid Google Source Token')) {
+          errorMessage = 'Google authentication configuration error on server';
+        } else if (errorStr.contains('401') && !errorStr.contains('google')) {
           errorMessage = 'Invalid username or password';
         } else if (errorStr.contains('DioException')) {
           // Try to extract backend message if available
@@ -184,12 +186,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                           'assets/icons/google_logo.png',
                           width: 20,
                           height: 20,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                            Icons.account_circle_outlined,
-                            color: Colors.red,
-                            size: 20,
-                          ),
+                          fit: BoxFit.contain,
                         ),
                         label: Text(
                           'Sign in with Google',

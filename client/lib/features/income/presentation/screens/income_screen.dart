@@ -170,7 +170,7 @@ class IncomeScreen extends ConsumerWidget {
           children: [
             const SizedBox(height: 4),
             Text(
-              DateFormat('MMM dd, yyyy').format(income.date),
+              DateFormat('MMM dd, yyyy').format(income.date.toUtc().add(const Duration(hours: 5, minutes: 30))),
               style: GoogleFonts.inter(fontSize: 12, color: AppColors.textHint),
             ),
             if (income.note != null && income.note!.isNotEmpty) ...[

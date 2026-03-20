@@ -8,7 +8,11 @@ part 'sales_repository.g.dart';
 
 abstract class SalesRepository {
   Future<List<Sale>> getSales();
-  Future<Sale> createSale(String itemId, double quantity, {double? sellPrice});
+  Future<Sale> createSaleBill({
+    required List<Map<String, dynamic>> items,
+    required String billId,
+  });
+  Future<String> getNextBillId();
 }
 
 class SalesRepositoryImpl implements SalesRepository {
@@ -26,32 +30,44 @@ class SalesRepositoryImpl implements SalesRepository {
   }
 
   @override
-  Future<Sale> createSale(
-    String itemId,
-    double quantity, {
-    double? sellPrice,
+  Future<Sale> createSaleBill({
+    required List<Map<String, dynamic>> items,
+    required String billId,
   }) async {
     dev.log(
-      '🛒 [SalesRepo] Creating sale - itemId: $itemId, qty: $quantity, customPrice: $sellPrice',
+      '🛒 [SalesRepo] Creating sale bill - billId: $billId, itemCount: ${items.length}',
     );
     try {
-      final data = <String, dynamic>{'itemId': itemId, 'quantity': quantity};
-      if (sellPrice != null) {
-        data['sellPrice'] = sellPrice;
-      }
+      final data = <String, dynamic>{
+        'items': items,
+        'billId': billId,
+      };
 
       final response = await _apiClient.dio.post('sales', data: data);
       final sale = Sale.fromJson(response.data);
       dev.log(
-        '✅ [SalesRepo] Sale created - id: ${sale.id}, item: ${sale.itemName}, subtotal: ${sale.subtotal}',
+        '✅ [SalesRepo] Sale created - id: ${sale.id}, billId: ${sale.billId}, total: ${sale.totalAmount}',
       );
       return sale;
     } catch (e) {
-      dev.log('❌ [SalesRepo] Error creating sale: $e');
+      dev.log('❌ [SalesRepo] Error creating sale bill: $e');
       rethrow;
     }
   }
+
+  @override
+  Future<String> getNextBillId() async {
+    try {
+      final response = await _apiClient.dio.get('sales/next-bill-id');
+      final data = response.data['data'] as String;
+      return data;
+    } catch (e) {
+      dev.log('❌ [SalesRepo] Error fetching next bill id: $e');
+      return '001'; // Default fallback
+    }
+  }
 }
+
 
 @riverpod
 SalesRepository salesRepository(Ref ref) {

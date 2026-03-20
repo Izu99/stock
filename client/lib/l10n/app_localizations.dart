@@ -1007,7 +1007,7 @@ abstract class AppLocalizations {
   /// No description provided for @addStock.
   ///
   /// In en, this message translates to:
-  /// **'Add Stock'**
+  /// **'Stock'**
   String get addStock;
 
   /// No description provided for @itemsLowStock.
@@ -1021,6 +1021,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Categories'**
   String get categories;
+
+  /// No description provided for @salesTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Trends'**
+  String get salesTrends;
+
+  /// No description provided for @profitTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit Trends'**
+  String get profitTrends;
+
+  /// No description provided for @businessProfitability.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Overview'**
+  String get businessProfitability;
+
+  /// No description provided for @topPerformingItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Items'**
+  String get topPerformingItems;
+
+  /// No description provided for @detailedActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Details'**
+  String get detailedActivity;
+
+  /// No description provided for @customRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Range'**
+  String get customRange;
+
+  /// No description provided for @sold.
+  ///
+  /// In en, this message translates to:
+  /// **'Sold'**
+  String get sold;
+
+  /// No description provided for @filteredStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Filtered Statistics'**
+  String get filteredStatistics;
+
+  /// No description provided for @viewMore.
+  ///
+  /// In en, this message translates to:
+  /// **'View More'**
+  String get viewMore;
+
+  /// No description provided for @showLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Less'**
+  String get showLess;
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get units;
 }
 
 class _AppLocalizationsDelegate

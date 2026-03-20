@@ -6,7 +6,7 @@ import '../../data/models/dashboard_summary.dart';
 part 'dashboard_repository.g.dart';
 
 abstract class DashboardRepository {
-  Future<DashboardSummary> getSummary();
+  Future<DashboardSummary> getSummary({DateTime? startDate, DateTime? endDate});
 }
 
 class DashboardRepositoryImpl implements DashboardRepository {
@@ -15,8 +15,22 @@ class DashboardRepositoryImpl implements DashboardRepository {
   DashboardRepositoryImpl(this._apiClient);
 
   @override
-  Future<DashboardSummary> getSummary() async {
-    final response = await _apiClient.dio.get('dashboard/summary');
+  Future<DashboardSummary> getSummary({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    final Map<String, dynamic> queryParameters = {};
+    if (startDate != null) {
+      queryParameters['startDate'] = startDate.toIso8601String();
+    }
+    if (endDate != null) {
+      queryParameters['endDate'] = endDate.toIso8601String();
+    }
+
+    final response = await _apiClient.dio.get(
+      'dashboard/summary',
+      queryParameters: queryParameters,
+    );
     return DashboardSummary.fromJson(response.data);
   }
 }

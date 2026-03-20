@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- String get id; String get username; String get email; String get role; String? get companyName; String? get token;
+ String get id; String get username; String get email; String get role; Company? get company; String? get token;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.company, company) || other.company == company)&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,email,role,companyName,token);
+int get hashCode => Object.hash(runtimeType,id,username,email,role,company,token);
 
 @override
 String toString() {
-  return 'User(id: $id, username: $username, email: $email, role: $role, companyName: $companyName, token: $token)';
+  return 'User(id: $id, username: $username, email: $email, role: $role, company: $company, token: $token)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String id, String username, String email, String role, String? companyName, String? token
+ String id, String username, String email, String role, Company? company, String? token
 });
 
 
-
+$CompanyCopyWith<$Res>? get company;
 
 }
 /// @nodoc
@@ -65,18 +65,30 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? username = null,Object? email = null,Object? role = null,Object? companyName = freezed,Object? token = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? username = null,Object? email = null,Object? role = null,Object? company = freezed,Object? token = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
-as String?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,company: freezed == company ? _self.company : company // ignore: cast_nullable_to_non_nullable
+as Company?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
+/// Create a copy of User
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CompanyCopyWith<$Res>? get company {
+    if (_self.company == null) {
+    return null;
+  }
 
+  return $CompanyCopyWith<$Res>(_self.company!, (value) {
+    return _then(_self.copyWith(company: value));
+  });
+}
 }
 
 
@@ -158,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String username,  String email,  String role,  String? companyName,  String? token)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String username,  String email,  String role,  Company? company,  String? token)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.username,_that.email,_that.role,_that.companyName,_that.token);case _:
+return $default(_that.id,_that.username,_that.email,_that.role,_that.company,_that.token);case _:
   return orElse();
 
 }
@@ -179,10 +191,10 @@ return $default(_that.id,_that.username,_that.email,_that.role,_that.companyName
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String username,  String email,  String role,  String? companyName,  String? token)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String username,  String email,  String role,  Company? company,  String? token)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.username,_that.email,_that.role,_that.companyName,_that.token);case _:
+return $default(_that.id,_that.username,_that.email,_that.role,_that.company,_that.token);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +211,10 @@ return $default(_that.id,_that.username,_that.email,_that.role,_that.companyName
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String username,  String email,  String role,  String? companyName,  String? token)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String username,  String email,  String role,  Company? company,  String? token)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.username,_that.email,_that.role,_that.companyName,_that.token);case _:
+return $default(_that.id,_that.username,_that.email,_that.role,_that.company,_that.token);case _:
   return null;
 
 }
@@ -213,15 +225,15 @@ return $default(_that.id,_that.username,_that.email,_that.role,_that.companyName
 /// @nodoc
 @JsonSerializable()
 
-class _User implements User {
-  const _User({required this.id, required this.username, required this.email, required this.role, this.companyName, this.token});
+class _User extends User {
+  const _User({required this.id, required this.username, required this.email, required this.role, this.company, this.token}): super._();
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 @override final  String id;
 @override final  String username;
 @override final  String email;
 @override final  String role;
-@override final  String? companyName;
+@override final  Company? company;
 @override final  String? token;
 
 /// Create a copy of User
@@ -237,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.company, company) || other.company == company)&&(identical(other.token, token) || other.token == token));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,email,role,companyName,token);
+int get hashCode => Object.hash(runtimeType,id,username,email,role,company,token);
 
 @override
 String toString() {
-  return 'User(id: $id, username: $username, email: $email, role: $role, companyName: $companyName, token: $token)';
+  return 'User(id: $id, username: $username, email: $email, role: $role, company: $company, token: $token)';
 }
 
 
@@ -257,11 +269,11 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String username, String email, String role, String? companyName, String? token
+ String id, String username, String email, String role, Company? company, String? token
 });
 
 
-
+@override $CompanyCopyWith<$Res>? get company;
 
 }
 /// @nodoc
@@ -274,19 +286,31 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? username = null,Object? email = null,Object? role = null,Object? companyName = freezed,Object? token = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? username = null,Object? email = null,Object? role = null,Object? company = freezed,Object? token = freezed,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
-as String?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,company: freezed == company ? _self.company : company // ignore: cast_nullable_to_non_nullable
+as Company?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
 
+/// Create a copy of User
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CompanyCopyWith<$Res>? get company {
+    if (_self.company == null) {
+    return null;
+  }
 
+  return $CompanyCopyWith<$Res>(_self.company!, (value) {
+    return _then(_self.copyWith(company: value));
+  });
+}
 }
 
 // dart format on

@@ -29,6 +29,11 @@ exports.addStockItem = async (req, res) => {
 
     const stockData = { ...req.body };
     delete stockData._id; 
+    
+    // Clean up barcode to avoid duplicate nulls/empty strings
+    if (!stockData.barcode || (typeof stockData.barcode === 'string' && stockData.barcode.trim() === '')) {
+      delete stockData.barcode;
+    }
 
     console.log(`💾 [Stock] Database operation: Saving item ${name}...`);
     const item = new StockItem({
@@ -63,6 +68,13 @@ exports.updateStockItem = async (req, res) => {
     const updateData = { ...req.body };
     delete updateData.companyId; 
     delete updateData._id;
+
+    // Clean up barcode to avoid duplicate nulls/empty strings
+    if (Object.prototype.hasOwnProperty.call(updateData, 'barcode')) {
+      if (!updateData.barcode || updateData.barcode.trim() === '') {
+        delete updateData.barcode;
+      }
+    }
 
     console.log(`💾 [Stock] Database operation: Updating record in DB...`);
     const item = await StockItem.findOneAndUpdate(

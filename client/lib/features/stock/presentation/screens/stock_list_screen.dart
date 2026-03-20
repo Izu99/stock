@@ -22,6 +22,8 @@ class StockListScreen extends ConsumerStatefulWidget {
 class _StockListScreenState extends ConsumerState<StockListScreen> {
   String _searchQuery = '';
   String _selectedCategory = 'All';
+  String _sortBy = 'name'; // 'name', 'price_asc', 'price_desc'
+  bool _showLowStockOnly = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,12 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
             onPressed: () => context.push('/stock/categories'),
           ),
           IconButton(
-            icon: const Icon(Icons.filter_list_rounded),
+            icon: Icon(
+              Icons.filter_list_rounded,
+              color: (_sortBy != 'name' || _showLowStockOnly)
+                  ? AppColors.primary
+                  : null,
+            ),
             onPressed: _showFilterSheet,
           ),
         ],
@@ -159,7 +166,26 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                     (item) => item.category == _selectedCategory,
                   );
                 }
+
+                if (_showLowStockOnly) {
+                  filteredItems = filteredItems.where(
+                    (item) => item.quantity <= item.lowStockThreshold,
+                  );
+                }
+
                 final items = filteredItems.toList();
+
+                // Sorting
+                if (_sortBy == 'name') {
+                  items.sort(
+                    (a, b) =>
+                        a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+                  );
+                } else if (_sortBy == 'price_asc') {
+                  items.sort((a, b) => a.sellPrice.compareTo(b.sellPrice));
+                } else if (_sortBy == 'price_desc') {
+                  items.sort((a, b) => b.sellPrice.compareTo(a.sellPrice));
+                }
 
                 if (items.isEmpty) {
                   return EmptyStateWidget(
@@ -432,52 +458,124 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
   }
 
   void _showFilterSheet() {
-    // Simple bottom sheet filter
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Filter Options',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.divider,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Filter Options',
+                      style: GoogleFonts.inter(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildFilterItem(
+                      icon: Icons.sort_by_alpha_rounded,
+                      label: 'Sort by Name',
+                      isSelected: _sortBy == 'name',
+                      onTap: () => _updateFilter('name', _showLowStockOnly),
+                    ),
+                    _buildFilterItem(
+                      icon: Icons.trending_up_rounded,
+                      label: 'Price: Low to High',
+                      isSelected: _sortBy == 'price_asc',
+                      onTap: () =>
+                          _updateFilter('price_asc', _showLowStockOnly),
+                    ),
+                    _buildFilterItem(
+                      icon: Icons.trending_down_rounded,
+                      label: 'Price: High to Low',
+                      isSelected: _sortBy == 'price_desc',
+                      onTap: () =>
+                          _updateFilter('price_desc', _showLowStockOnly),
+                    ),
+                    const Divider(height: 24),
+                    _buildFilterItem(
+                      icon: Icons.warning_amber_rounded,
+                      label: 'Low Stock Only',
+                      isSelected: _showLowStockOnly,
+                      color: AppColors.warning,
+                      onTap: () => _updateFilter(_sortBy, !_showLowStockOnly),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              ListTile(
-                leading: const Icon(Icons.sort_by_alpha),
-                title: const Text('Sort by Name'),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                leading: const Icon(Icons.arrow_downward),
-                title: const Text('Price: Low to High'),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                leading: const Icon(Icons.arrow_upward),
-                title: const Text('Price: High to Low'),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                leading: Icon(Icons.warning_amber, color: AppColors.warning),
-                title: const Text('Low Stock Only'),
-                onTap: () => Navigator.pop(context),
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
+            );
+          },
         );
       },
+    );
+  }
+
+  void _updateFilter(String sortBy, bool showLowStock) {
+    setState(() {
+      _sortBy = sortBy;
+      _showLowStockOnly = showLowStock;
+    });
+    Navigator.pop(context);
+  }
+
+  Widget _buildFilterItem({
+    required IconData icon,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    Color? color,
+  }) {
+    final activeColor = color ?? AppColors.primary;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? activeColor : AppColors.textSecondary,
+              size: 22,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                label,
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? activeColor : AppColors.textPrimary,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Icon(Icons.check_circle_rounded, color: activeColor, size: 20),
+          ],
+        ),
+      ),
     );
   }
 
@@ -661,11 +759,15 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              isEdit ? l10n.editItem : l10n.addItem,
-                              style: GoogleFonts.inter(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
+                            Expanded(
+                              child: Text(
+                                isEdit ? l10n.editItem : l10n.addItem,
+                                style: GoogleFonts.inter(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             IconButton(
@@ -675,6 +777,7 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                           ],
                         ),
                       ),
+
                       const Divider(height: 1),
                       // Form
                       Expanded(
@@ -848,7 +951,21 @@ class _StockListScreenState extends ConsumerState<StockListScreen> {
                                     );
                                   },
                                 ),
-                                const SizedBox(height: 16),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      context.push('/stock/categories');
+                                    },
+                                    icon: const Icon(Icons.settings, size: 16),
+                                    label: const Text(
+                                      'Manage Categories',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
                                 // Subcategory Dropdown
                                 Consumer(
                                   builder: (context, ref, _) {

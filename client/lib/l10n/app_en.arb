@@ -152,7 +152,18 @@
   "lowStockAlert": "Low Stock Alert",
   "viewAll": "View All",
   "noRecentActivity": "No recent activity",
-  "addStock": "Add Stock",
+  "addStock": "Stock",
   "itemsLowStock": "items are running low on quantity",
-  "categories": "Categories"
+  "categories": "Categories",
+  "salesTrends": "Sales Trends",
+  "profitTrends": "Profit Trends",
+  "businessProfitability": "Business Overview",
+  "topPerformingItems": "Top Items",
+  "detailedActivity": "Activity Details",
+  "customRange": "Custom Range",
+  "sold": "Sold",
+  "filteredStatistics": "Filtered Statistics",
+  "viewMore": "View More",
+  "showLess": "Show Less",
+  "units": "Units"
 }

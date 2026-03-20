@@ -8,10 +8,13 @@ part 'dashboard_provider.g.dart';
 @riverpod
 class DashboardSummaryNotifier extends _$DashboardSummaryNotifier {
   @override
-  FutureOr<DashboardSummary> build() async {
+  FutureOr<DashboardSummary> build({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final baseSummary = await ref
         .watch(dashboardRepositoryProvider)
-        .getSummary();
+        .getSummary(startDate: startDate, endDate: endDate);
     final stockItems = await ref.watch(stockProvider.future);
 
     // Calculate stock statistics
@@ -31,7 +34,7 @@ class DashboardSummaryNotifier extends _$DashboardSummaryNotifier {
     state = await AsyncValue.guard(() async {
       final baseSummary = await ref
           .read(dashboardRepositoryProvider)
-          .getSummary();
+          .getSummary(startDate: startDate, endDate: endDate);
       final stockItems = await ref.read(stockProvider.future);
 
       final totalItems = stockItems.length;

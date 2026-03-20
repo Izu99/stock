@@ -166,8 +166,7 @@ class ModernStatCardCompact extends StatelessWidget {
                     color: ModernTheme.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -177,7 +176,6 @@ class ModernStatCardCompact extends StatelessWidget {
                     color: ModernTheme.textPrimary,
                   ),
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

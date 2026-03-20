@@ -94,21 +94,37 @@ class SettingsScreen extends ConsumerWidget {
                     color: AppColors.divider.withValues(alpha: 0.5),
                   ),
                 ),
-                child: _buildSettingsTile(
-                  icon: Icons.language_rounded,
-                  iconColor: AppColors.primary,
-                  title: localeController.locale.languageCode == 'en'
-                      ? 'English'
-                      : 'සිංහල',
-                  trailing: Switch.adaptive(
-                    value: localeController.locale.languageCode == 'si',
-                    activeColor: AppColors.primary,
-                    onChanged: (isSinhala) {
-                      localeController.setLocale(
-                        Locale(isSinhala ? 'si' : 'en'),
-                      );
-                    },
-                  ),
+                child: Column(
+                  children: [
+                    _buildSettingsTile(
+                      icon: Icons.language_rounded,
+                      iconColor: AppColors.primary,
+                      title: localeController.locale.languageCode == 'en'
+                          ? 'English'
+                          : 'සිංහල',
+                      trailing: Switch.adaptive(
+                        value: localeController.locale.languageCode == 'si',
+                        activeColor: AppColors.primary,
+                        onChanged: (isSinhala) {
+                          localeController.setLocale(
+                            Locale(isSinhala ? 'si' : 'en'),
+                          );
+                        },
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                      indent: 56,
+                      color: AppColors.divider.withValues(alpha: 0.5),
+                    ),
+                    _buildSettingsTile(
+                      icon: Icons.category_rounded,
+                      iconColor: AppColors.success,
+                      title: 'Manage Categories',
+                      onTap: () => context.push('/stock/categories'),
+                      showArrow: true,
+                    ),
+                  ],
                 ),
               ),
 
@@ -270,7 +286,7 @@ class SettingsScreen extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              ?trailing,
+              if (trailing != null) trailing,
               if (showArrow)
                 const Icon(
                   Icons.chevron_right_rounded,

@@ -1,3 +1,6 @@
+import 'package:stock/features/auth/presentation/providers/auth_provider.dart';
+import 'package:stock/features/admin/data/models/company.dart';
+import 'package:stock/core/utils/export_utils.dart';
 import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,13 +16,28 @@ import '../../data/repositories/sales_repository.dart';
 class _CartItem {
   final StockItem stockItem;
   double quantity;
-  double sellPrice; // Editable sell price
+  double sellPrice;
+  String? error;
+  late final TextEditingController qtyController;
+  late final FocusNode focusNode;
 
   double get subtotal => sellPrice * quantity;
   double get profit => (sellPrice - stockItem.buyPrice) * quantity;
 
   _CartItem({required this.stockItem, this.quantity = 1.0})
-    : sellPrice = stockItem.sellPrice;
+    : sellPrice = stockItem.sellPrice {
+    qtyController = TextEditingController(
+      text: quantity.toStringAsFixed(
+        quantity == quantity.roundToDouble() ? 0 : 1,
+      ),
+    );
+    focusNode = FocusNode();
+  }
+
+  void dispose() {
+    qtyController.dispose();
+    focusNode.dispose();
+  }
 }
 
 class BillingScreen extends ConsumerStatefulWidget {
@@ -33,6 +51,15 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
   final List<_CartItem> _cart = [];
   String _searchQuery = '';
   bool _isProcessing = false;
+  Map<String, dynamic>? _lastInvoiceData;
+
+  @override
+  void dispose() {
+    for (var item in _cart) {
+      item.dispose();
+    }
+    super.dispose();
+  }
 
   double get _total => _cart.fold(0, (sum, item) => sum + item.subtotal);
   double get _totalProfit => _cart.fold(0, (sum, item) => sum + item.profit);
@@ -43,6 +70,13 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
       if (existing != -1) {
         if (_cart[existing].quantity < stockItem.quantity) {
           _cart[existing].quantity++;
+          _cart[existing].qtyController.text = _cart[existing].quantity
+              .toStringAsFixed(
+                _cart[existing].quantity ==
+                        _cart[existing].quantity.roundToDouble()
+                    ? 0
+                    : 1,
+              );
         } else {
           _showInsufficientStockSnack();
         }
@@ -67,19 +101,38 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
   }
 
   void _removeFromCart(int index) {
+    _cart[index].dispose();
     setState(() => _cart.removeAt(index));
   }
 
-  void _updateQuantity(int index, double qty) {
-    if (qty > _cart[index].stockItem.quantity) {
+  void _updateQuantity(int index, double qty, {bool updateController = true}) {
+    final item = _cart[index];
+    if (qty > item.stockItem.quantity) {
       _showInsufficientStockSnack();
+      setState(() {
+        item.error = 'Max: ${item.stockItem.quantity.toStringAsFixed(0)}';
+        item.quantity = qty; // Still update value so UI shows what user typed
+        if (updateController) {
+          item.qtyController.text = qty.toStringAsFixed(
+            qty == qty.roundToDouble() ? 0 : 1,
+          );
+        }
+      });
       return;
     }
     if (qty <= 0) {
       _removeFromCart(index);
       return;
     }
-    setState(() => _cart[index].quantity = qty);
+    setState(() {
+      item.error = null;
+      item.quantity = qty;
+      if (updateController) {
+        item.qtyController.text = qty.toStringAsFixed(
+          qty == qty.roundToDouble() ? 0 : 1,
+        );
+      }
+    });
   }
 
   void _updateSellPrice(int index, double price) {
@@ -292,49 +345,205 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
     );
   }
 
+  void _showSaleSuccessDialog({
+    required Company company,
+    required List<_CartItem> soldItems,
+    required double soldTotal,
+    required String invoiceNumber,
+  }) {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        title: Column(
+          children: [
+            const Icon(
+              Icons.check_circle_outline_rounded,
+              color: AppColors.success,
+              size: 64,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.saleCompleted,
+              style: GoogleFonts.inter(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Invoice #: $invoiceNumber',
+              style: GoogleFonts.inter(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildSmallActionIcon(
+                  assetPath: 'assets/icons/pdf.png',
+                  onTap: () async {
+                    await ExportUtils.generateInvoicePdf(
+                      company: company,
+                      cartItems: soldItems,
+                      total: soldTotal,
+                      invoiceNumber: invoiceNumber,
+                    );
+                  },
+                ),
+                const SizedBox(width: 12),
+                _buildSmallActionIcon(
+                  assetPath: 'assets/icons/excel.png',
+                  onTap: () async {
+                    await ExportUtils.generateInvoiceExcel(
+                      company: company,
+                      cartItems: soldItems,
+                      total: soldTotal,
+                      invoiceNumber: invoiceNumber,
+                    );
+                  },
+                ),
+                const SizedBox(width: 12),
+                _buildSmallActionIcon(
+                  assetPath: 'assets/icons/print.png',
+                  onTap: () async {
+                    await ExportUtils.generateInvoicePdf(
+                      company: company,
+                      cartItems: soldItems,
+                      total: soldTotal,
+                      invoiceNumber: invoiceNumber,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'Close',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w700,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('New Sale'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSmallActionIcon({
+    required String assetPath,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Image.asset(assetPath, width: 24, height: 24),
+      ),
+    );
+  }
+
   Future<void> _processSale(AppLocalizations l10n) async {
     if (_cart.isEmpty) return;
+
+    for (int i = 0; i < _cart.length; i++) {
+      final item = _cart[i];
+      if (item.quantity > item.stockItem.quantity) {
+        _showInsufficientStockSnack();
+        item.focusNode.requestFocus();
+        return;
+      }
+    }
+
     setState(() => _isProcessing = true);
 
     try {
       final repo = ref.read(salesRepositoryProvider);
+      final soldItems = List<_CartItem>.from(_cart);
+      final soldTotal = _total;
+      
+      // Fetch sequential bill ID from the backend (e.g., "001")
+      final invoiceNumber = await repo.getNextBillId();
 
-      dev.log(
-        '🛒 [BillingScreen] Starting sale processing with ${_cart.length} items',
+      // Prepare item data for the backend
+      final checkoutItems = _cart.map((cartItem) => {
+        'itemId': cartItem.stockItem.id,
+        'quantity': cartItem.quantity,
+        'sellPrice': cartItem.sellPrice,
+      }).toList();
+
+      // Submit the entire bill at once
+      await repo.createSaleBill(
+        items: checkoutItems,
+        billId: invoiceNumber,
       );
 
-      for (final cartItem in _cart) {
-        dev.log(
-          '📦 [BillingScreen] Selling: ${cartItem.stockItem.name} '
-          'x${cartItem.quantity} @ Rs.${cartItem.sellPrice}',
-        );
-        await repo.createSale(
-          cartItem.stockItem.id,
-          cartItem.quantity,
-          sellPrice: cartItem.sellPrice,
-        );
-        dev.log(
-          '✅ [BillingScreen] Sale created for: ${cartItem.stockItem.name}',
-        );
-      }
-
-      dev.log('🎉 [BillingScreen] All sales processed successfully');
-
-      if (!mounted) return;
 
       ref.invalidate(stockProvider);
 
+      if (!mounted) return;
+
+      final company = await ref.read(companyDetailsProvider.future);
+
       setState(() {
-        _cart.clear();
         _isProcessing = false;
+        _lastInvoiceData = {
+          'company': company,
+          'items': soldItems,
+          'total': soldTotal,
+          'invoiceNumber': invoiceNumber,
+        };
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.saleCompleted),
-          backgroundColor: AppColors.success,
-        ),
-      );
+      // 1. Clear cart immediately after successful server sync
+      setState(() => _cart.clear());
+
+      if (company != null) {
+        _showSaleSuccessDialog(
+          company: company,
+          soldItems: soldItems,
+          soldTotal: soldTotal,
+          invoiceNumber: invoiceNumber,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.saleCompleted),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        setState(() => _cart.clear());
+      }
     } catch (e, st) {
       dev.log('❌ [BillingScreen] Sale error: $e', error: e, stackTrace: st);
       if (mounted) {
@@ -365,6 +574,20 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
               icon: const Icon(Icons.clear_all, size: 18),
               label: const Text('Clear'),
               style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            ),
+          if (_lastInvoiceData != null && _cart.isEmpty)
+            TextButton.icon(
+              onPressed: () {
+                _showSaleSuccessDialog(
+                  company: _lastInvoiceData!['company'],
+                  soldItems: _lastInvoiceData!['items'],
+                  soldTotal: _lastInvoiceData!['total'],
+                  invoiceNumber: _lastInvoiceData!['invoiceNumber'],
+                );
+              },
+              icon: const Icon(Icons.history_edu_rounded, size: 20),
+              label: const Text('Last Invoice'),
+              style: TextButton.styleFrom(foregroundColor: AppColors.primary),
             ),
         ],
       ),
@@ -481,23 +704,37 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
     AppLocalizations l10n,
   ) {
     final priceChanged = cartItem.sellPrice != cartItem.stockItem.sellPrice;
+    final hasError = cartItem.error != null;
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: priceChanged
-              ? AppColors.warning.withValues(alpha: 0.5)
-              : AppColors.divider.withValues(alpha: 0.5),
+          color: hasError
+              ? AppColors.error
+              : (priceChanged
+                    ? AppColors.warning.withValues(alpha: 0.5)
+                    : AppColors.divider.withValues(alpha: 0.5)),
+          width: hasError ? 1.5 : 1.0,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Top Row: Item Name and Delete Button
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Item info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -505,138 +742,250 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                     Text(
                       cartItem.stockItem.name,
                       style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     // Tap to edit price
                     GestureDetector(
                       onTap: () => _showEditPriceDialog(index),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.edit_outlined,
-                            size: 12,
-                            color: priceChanged
-                                ? AppColors.warning
-                                : AppColors.textHint,
-                          ),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: priceChanged
+                              ? AppColors.warning.withValues(alpha: 0.1)
+                              : AppColors.surface,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.edit_outlined,
+                              size: 14,
+                              color: priceChanged
+                                  ? AppColors.warning
+                                  : AppColors.textHint,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
                               'Rs. ${cartItem.sellPrice.toStringAsFixed(2)}',
                               style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                                 color: priceChanged
                                     ? AppColors.warning
                                     : AppColors.textSecondary,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          if (priceChanged) ...[
-                            const SizedBox(width: 6),
-                            Text(
-                              '(${cartItem.stockItem.sellPrice.toStringAsFixed(0)})',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                color: AppColors.textHint,
-                                decoration: TextDecoration.lineThrough,
+                            if (priceChanged) ...[
+                              const SizedBox(width: 6),
+                              Text(
+                                '(${cartItem.stockItem.sellPrice.toStringAsFixed(0)})',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: AppColors.textHint,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
                               ),
-                            ),
+                            ],
                           ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Quantity controls
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildQtyButton(Icons.remove, () {
-                      _updateQuantity(index, cartItem.quantity - 1);
-                    }),
-                    GestureDetector(
-                      onTap: () => _showEditQuantityDialog(index),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: Text(
-                          cartItem.quantity.toStringAsFixed(
-                            cartItem.quantity ==
-                                    cartItem.quantity.roundToDouble()
-                                ? 0
-                                : 1,
-                          ),
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
                         ),
                       ),
                     ),
-                    _buildQtyButton(Icons.add, () {
-                      _updateQuantity(index, cartItem.quantity + 1);
-                    }),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              // Subtotal + delete
-              SizedBox(
-                width: 70, // Fixed width for subtotal area
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Rs.${cartItem.subtotal.toStringAsFixed(0)}',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    GestureDetector(
-                      onTap: () => _removeFromCart(index),
-                      child: const Icon(
-                        Icons.delete_outline,
-                        size: 18,
-                        color: AppColors.error,
-                      ),
-                    ),
-                  ],
+              GestureDetector(
+                onTap: () => _removeFromCart(index),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.delete_outline_rounded,
+                    size: 20,
+                    color: AppColors.error,
+                  ),
                 ),
               ),
             ],
           ),
+
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Divider(height: 1),
+          ),
+
+          // Bottom Row: Quantity Controls and Subtotal
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Quantity controls - Large and easy to tap
+              GestureDetector(
+                onLongPress: () => _showEditQuantityDialog(index),
+                child: Container(
+                  height: 48, // Taller for better hit area
+                  width: 160, // Wider for more space
+                  decoration: BoxDecoration(
+                    color: hasError
+                        ? AppColors.error.withValues(alpha: 0.05)
+                        : AppColors.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: hasError ? AppColors.error : AppColors.border,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      _buildQtyButton(Icons.remove_rounded, () {
+                        _updateQuantity(index, cartItem.quantity - 1);
+                      }),
+                      Expanded(
+                        child: TextField(
+                          controller: cartItem.qtyController,
+                          focusNode: cartItem.focusNode
+                            ..addListener(() {
+                              if (!cartItem.focusNode.hasFocus) {
+                                final val = double.tryParse(
+                                  cartItem.qtyController.text,
+                                );
+                                if (val != null) {
+                                  _updateQuantity(index, val);
+                                } else {
+                                  _updateQuantity(index, cartItem.quantity);
+                                }
+                              }
+                            }),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d*\.?\d{0,2}'),
+                            ),
+                          ],
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 18, // Larger font for entry
+                            fontWeight: FontWeight.w700,
+                            color: hasError
+                                ? AppColors.error
+                                : AppColors.primary,
+                          ),
+                          decoration: const InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            final val = double.tryParse(value);
+                            if (val != null && val >= 0) {
+                              setState(() {
+                                cartItem.quantity = val;
+                                if (val > cartItem.stockItem.quantity) {
+                                  cartItem.error =
+                                      'Max: ${cartItem.stockItem.quantity.toStringAsFixed(0)}';
+                                } else {
+                                  cartItem.error = null;
+                                }
+                              });
+                            }
+                          },
+                          onSubmitted: (value) {
+                            final val = double.tryParse(value);
+                            if (val != null) {
+                              _updateQuantity(index, val);
+                            }
+                          },
+                          onTap: () {
+                            cartItem.qtyController.selection = TextSelection(
+                              baseOffset: 0,
+                              extentOffset: cartItem.qtyController.text.length,
+                            );
+                          },
+                        ),
+                      ),
+                      _buildQtyButton(Icons.add_rounded, () {
+                        _updateQuantity(index, cartItem.quantity + 1);
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Subtotal area
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    l10n.subtotal,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: AppColors.textHint,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    'Rs.${cartItem.subtotal.toStringAsFixed(0)}',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: hasError ? AppColors.error : AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          if (hasError)
+            Padding(
+              padding: const EdgeInsets.only(top: 8, left: 4),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 14,
+                    color: AppColors.error,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    cartItem.error!,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: AppColors.error,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
   }
 
   Widget _buildQtyButton(IconData icon, VoidCallback onTap) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Icon(icon, size: 18, color: AppColors.primary),
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: 44, // Large hit area
+        height: double.infinity,
+        alignment: Alignment.center,
+        child: Icon(icon, size: 22, color: AppColors.primary),
       ),
     );
   }
@@ -897,6 +1246,18 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
                                 onTap: () {
                                   _addToCart(item);
                                   // Stay open! Just refresh the sheet
+                                  setSheetState(() {});
+                                },
+                                onLongPress: () {
+                                  // Find current index in cart (or add it if not exists)
+                                  int cartIndex = _cart.indexWhere(
+                                    (c) => c.stockItem.id == item.id,
+                                  );
+                                  if (cartIndex == -1) {
+                                    _addToCart(item);
+                                    cartIndex = _cart.length - 1;
+                                  }
+                                  _showEditQuantityDialog(cartIndex);
                                   setSheetState(() {});
                                 },
                               ),

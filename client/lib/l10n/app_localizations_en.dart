@@ -462,11 +462,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noRecentActivity => 'No recent activity';
 
   @override
-  String get addStock => 'Add Stock';
+  String get addStock => 'Stock';
 
   @override
   String get itemsLowStock => 'items are running low on quantity';
 
   @override
   String get categories => 'Categories';
+
+  @override
+  String get salesTrends => 'Sales Trends';
+
+  @override
+  String get profitTrends => 'Profit Trends';
+
+  @override
+  String get businessProfitability => 'Business Overview';
+
+  @override
+  String get topPerformingItems => 'Top Items';
+
+  @override
+  String get detailedActivity => 'Activity Details';
+
+  @override
+  String get customRange => 'Custom Range';
+
+  @override
+  String get sold => 'Sold';
+
+  @override
+  String get filteredStatistics => 'Filtered Statistics';
+
+  @override
+  String get viewMore => 'View More';
+
+  @override
+  String get showLess => 'Show Less';
+
+  @override
+  String get units => 'Units';
 }

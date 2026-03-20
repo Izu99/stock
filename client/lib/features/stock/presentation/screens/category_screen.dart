@@ -95,20 +95,40 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                   children: [
                     ...category.subcategories.map(
                       (sub) => Chip(
-                        label: Text(sub, style: const TextStyle(fontSize: 12)),
-                        deleteIcon: const Icon(Icons.close, size: 14),
+                        label: Text(
+                          sub,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        deleteIcon:
+                            const Icon(Icons.close, size: 14, color: Colors.grey),
                         onDeleted: () => _removeSubcategory(category, sub),
                         backgroundColor: AppColors.surface,
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(color: AppColors.divider.withValues(alpha: 0.5)),
+                        ),
                       ),
                     ),
                     ActionChip(
-                      label: const Text(
+                      label: Text(
                         '+ Sub',
-                        style: TextStyle(fontSize: 12),
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
+                        ),
                       ),
                       onPressed: () =>
                           _showAddSubcategoryDialog(context, category, l10n),
                       backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ],
                 ),
