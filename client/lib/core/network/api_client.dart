@@ -6,7 +6,8 @@ class ApiClient {
   final Dio _dio;
   final Logger _logger = Logger();
 
-  ApiClient({String baseUrl = 'http://10.0.2.2:5000/api/'})
+  // Use VPS IP instead of emulator localhost (10.0.2.2)
+  ApiClient({String baseUrl = 'http://82.25.180.20:5004/api/'})
     : _dio = Dio(
         BaseOptions(
           baseUrl: baseUrl,
