@@ -13,6 +13,7 @@ const startServer = async () => {
   await connectDB();
 
   const app = express();
+  app.set('trust proxy', true);
 
   app.use(express.json());
   app.use(cors());
@@ -49,11 +50,12 @@ const startServer = async () => {
   // Global error handler (must be last)
   app.use(errorHandler);
 
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.PORT || process.argv[2] || 5000;
 
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     logger.info(`🚀 SERVER VERSION: SECURE_ROLES_V1`);
     logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    logger.info(`Listening on all network interfaces (0.0.0.0)`);
   });
 };
 
